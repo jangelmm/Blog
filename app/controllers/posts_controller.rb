@@ -36,6 +36,15 @@ class PostsController < ApplicationController
   end
 
   def update
+    # 1. Procesar la eliminación de imágenes seleccionadas en el checkbox
+    if params[:purge_images].present?
+      params[:purge_images].each do |image_id|
+        image = @post.body_images.find_by(id: image_id)
+        image.purge if image # Esto elimina el archivo de la base de datos y del disco
+      end
+    end
+
+    # 2. Actualizar el resto del post
     if @post.update(post_params)
       redirect_to post_show_path(path: @post.path, slug: @post.slug), notice: "Entrada actualizada."
     else

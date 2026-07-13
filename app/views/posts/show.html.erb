@@ -14,7 +14,7 @@
   <% end %>
 
   <div class="markdown-body">
-    <%= markdown(@post.body) %>
+    <%= markdown(@post.body, @post) %>
   </div>
 
   <% if logged_in? %>
