@@ -1,0 +1,54 @@
+<%= form_with model: project, url: (project.new_record? ? projects_path : project_path(project.slug)), local: true, multipart: true, class: "admin-form" do |f| %>
+  <% if project.errors.any? %>
+    <div class="form-errors">
+      <p><strong><%= pluralize(project.errors.count, "error") %> impidieron guardar este proyecto:</strong></p>
+      <ul>
+        <% project.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title, "Título" %>
+    <%= f.text_field :title, required: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description, "Descripción corta (aparece en la tarjeta)" %>
+    <%= f.text_area :description, rows: 2 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :tech_stack, "Tecnologías (separadas por coma)" %>
+    <%= f.text_field :tech_stack, placeholder: "Python, C++, CUDA" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :icon, "Ícono Font Awesome de respaldo (si no subes imagen)" %>
+    <%= f.text_field :icon, placeholder: "fa-solid fa-satellite" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :image, "Imagen de referencia del proyecto" %>
+    <%= f.file_field :image, accept: "image/*" %>
+    <% if project.image.attached? %>
+      <div class="current-image"><%= image_tag project.image, alt: project.title %></div>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= f.label :position, "Orden (menor número = aparece primero)" %>
+    <%= f.number_field :position %>
+  </div>
+
+  <div class="field markdown-editor">
+    <%= f.label :body, "Descripción larga (Markdown, opcional)" %>
+    <p class="hint">Soporta encabezados, negritas, listas, enlaces y bloques de código.</p>
+    <%= f.text_area :body, rows: 14, placeholder: "Detalles técnicos del proyecto en **Markdown**..." %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit (project.new_record? ? "Crear proyecto" : "Guardar cambios"), class: "btn-primary" %>
+    <%= link_to "Cancelar", projects_path, class: "btn-outline" %>
+  </div>
+<% end %>

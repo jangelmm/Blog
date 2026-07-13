@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= content_for?(:title) ? yield(:title) : "#{@profile&.name || 'Mi Blog'} · Software Científico & SaaS" %></title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= javascript_importmap_tags if respond_to?(:javascript_importmap_tags) %>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <%= link_to root_path, class: "logo" do %>
+        <i class="fa-solid fa-code"></i> J<span>angel</span>
+      <% end %>
+      <nav>
+        <%= link_to "Home", root_path %>
+        <%= link_to "Blog", posts_path %>
+        <%= link_to "About", about_path %>
+        <%= link_to "Proyectos", projects_path %>
+      </nav>
+
+      <% if logged_in? %>
+        <div class="admin-menu">
+          <%= link_to new_post_path, class: "btn-header btn-header-outline" do %>
+            <i class="fa-solid fa-plus"></i> Entrada
+          <% end %>
+          <%= link_to new_project_path, class: "btn-header btn-header-outline" do %>
+            <i class="fa-solid fa-plus"></i> Proyecto
+          <% end %>
+          <%= button_to "Salir", logout_path, method: :delete, class: "btn-header btn-logout", form: { data: { turbo_confirm: "¿Cerrar sesión?" } } %>
+        </div>
+      <% else %>
+        <a href="https://github.com/jangelmm" target="_blank" rel="noopener" class="btn-header">
+          <i class="fa-brands fa-github"></i> GitHub
+        </a>
+      <% end %>
+    </div>
+  </header>
+
+  <% if notice %>
+    <div class="flash flash-notice"><i class="fa-solid fa-circle-check"></i> <%= notice %></div>
+  <% end %>
+  <% if alert %>
+    <div class="flash flash-alert"><i class="fa-solid fa-triangle-exclamation"></i> <%= alert %></div>
+  <% end %>
+
+  <main>
+    <%= yield %>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-links">
+        <%= link_to root_path do %><i class="fa-solid fa-house"></i> Inicio<% end %>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> GitHub</a>
+        <a href="mailto:tu-correo@ejemplo.com"><i class="fa-solid fa-envelope"></i> Contacto</a>
+      </div>
+      <p class="copyright">
+        © <span><%= Date.current.year %></span> <%= @profile&.name || "Mi Blog" %> · Todos los derechos reservados.
+        <br class="mobile-break">
+        <span style="font-size:0.75rem; opacity:0.6;">Construido con <i class="fa-solid fa-heart" style="color:var(--accent);"></i> y Ruby on Rails.</span>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

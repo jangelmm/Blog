@@ -1,0 +1,42 @@
+<section id="projects">
+  <div class="section-header">
+    <h2><i class="fa-solid fa-diagram-project"></i> Proyectos</h2>
+    <% if logged_in? %>
+      <%= link_to new_project_path, class: "link-more" do %>
+        <i class="fa-solid fa-plus"></i> Nuevo proyecto
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="projects-grid">
+    <% @projects.each do |project| %>
+      <div class="project-card">
+        <div class="project-img">
+          <% if project.image.attached? %>
+            <%= image_tag project.image, alt: project.title %>
+          <% else %>
+            <i class="<%= project.icon.presence || 'fa-solid fa-cube' %>" style="font-size:2.8rem; color:var(--accent);"></i>
+          <% end %>
+        </div>
+        <div class="project-info">
+          <h4><%= link_to project.title, project_path(project.slug) %></h4>
+          <p><%= project.description %></p>
+          <div class="project-tech">
+            <% project.tech_list.each do |t| %><span><%= t %></span><% end %>
+          </div>
+
+          <% if logged_in? %>
+            <div class="admin-actions">
+              <%= link_to "Editar", edit_project_path(project.slug), class: "btn-tiny" %>
+              <%= button_to "Eliminar", project_path(project.slug), method: :delete, class: "btn-tiny btn-tiny-danger",
+                            form: { data: { turbo_confirm: "¿Eliminar este proyecto?" } } %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    <% if @projects.empty? %>
+      <p class="empty-state">Aún no hay proyectos.</p>
+    <% end %>
+  </div>
+</section>

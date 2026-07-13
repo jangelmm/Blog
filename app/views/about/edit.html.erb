@@ -1,0 +1,50 @@
+<section class="form-page">
+  <div class="section-header"><h2><i class="fa-solid fa-user-astronaut"></i> Editar "Sobre mí"</h2></div>
+
+  <%= form_with model: @profile, url: about_path, local: true, multipart: true, class: "admin-form" do |f| %>
+    <% if @profile.errors.any? %>
+      <div class="form-errors">
+        <p><strong><%= pluralize(@profile.errors.count, "error") %>:</strong></p>
+        <ul><% @profile.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %></ul>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :name, "Nombre" %>
+      <%= f.text_field :name, required: true %>
+    </div>
+
+    <div class="field">
+      <%= f.label :role, "Rol / cargo" %>
+      <%= f.text_field :role %>
+    </div>
+
+    <div class="field">
+      <%= f.label :bio, "Biografía" %>
+      <%= f.text_area :bio, rows: 6 %>
+    </div>
+
+    <div class="field">
+      <%= f.label :quote, "Frase destacada" %>
+      <%= f.text_field :quote %>
+    </div>
+
+    <div class="field">
+      <%= f.label :location_label, "Ubicación / pie de foto" %>
+      <%= f.text_field :location_label, placeholder: "Observatorio Astronómico Nacional · 2024" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :photo, "Foto (se puede subir desde tu computadora)" %>
+      <%= f.file_field :photo, accept: "image/*" %>
+      <% if @profile.photo.attached? %>
+        <div class="current-image"><%= image_tag @profile.photo, alt: @profile.name %></div>
+      <% end %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit "Guardar cambios", class: "btn-primary" %>
+      <%= link_to "Cancelar", about_path, class: "btn-outline" %>
+    </div>
+  <% end %>
+</section>

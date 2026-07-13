@@ -1,0 +1,112 @@
+<section class="hero">
+  <div class="hero-badge">
+    <i class="fa-solid fa-atom"></i> Ingeniería Científica & Software
+  </div>
+  <h1>
+    Programador de <span class="highlight">software científico</span><br> e Ingeniería
+  </h1>
+  <p class="hero-subtitle">
+    Aquí escribo sobre desarrollo de software, tips, apuntes, proyectos de ingeniería y un poco de mi.
+  </p>
+  <div class="hero-tags">
+    <span><i class="fa-solid fa-microscope"></i> Computación Científica</span>
+    <span><i class="fa-solid fa-cloud"></i> SaaS & Ruby on Rails</span>
+    <span><i class="fa-solid fa-terminal"></i> Linux & Systems</span>
+    <span><i class="fa-solid fa-microchip"></i> Sistemas Embebidos</span>
+    <span><i class="fa-solid fa-atom"></i> Astrofísica & Partículas</span>
+    <span><i class="fa-solid fa-chart-line"></i> Análisis de Datos</span>
+  </div>
+  <%= link_to projects_path, class: "btn-primary" do %>
+    <i class="fa-solid fa-rocket"></i> Ver proyectos
+  <% end %>
+  <%= link_to about_path, class: "btn-outline" do %>
+    <i class="fa-solid fa-user-astronaut"></i> Sobre mí
+  <% end %>
+</section>
+
+<section id="about">
+  <div class="about-home">
+    <div class="about-img-wrapper">
+      <% if @profile.photo.attached? %>
+        <%= image_tag @profile.photo, alt: @profile.name %>
+      <% else %>
+        <img src="https://images.unsplash.com/photo-1518546305927-5a4bbfe3a78a?w=800&h=600&fit=crop&auto=format" alt="Foto de perfil">
+      <% end %>
+      <% if @profile.location_label.present? %>
+        <div class="about-img-overlay">
+          <i class="fa-solid fa-location-dot"></i> <%= @profile.location_label %>
+        </div>
+      <% end %>
+    </div>
+    <div class="about-content">
+      <h3><%= @profile.name %></h3>
+      <% if @profile.role.present? %>
+        <span class="role"><i class="fa-solid fa-terminal"></i> <%= @profile.role %></span>
+      <% end %>
+      <% if @profile.bio.present? %>
+        <p><%= @profile.bio %></p>
+      <% end %>
+      <% if @profile.quote.present? %>
+        <p style="font-size:0.9rem;">
+          <i class="fa-solid fa-quote-left" style="color:var(--accent); opacity:0.6;"></i>
+          <%= @profile.quote %>
+        </p>
+      <% end %>
+      <%= link_to "Más sobre mí", about_path, class: "btn-sm" %>
+    </div>
+  </div>
+</section>
+
+<section id="blog">
+  <div class="section-header">
+    <h2><i class="fa-solid fa-pen-nib"></i> Blog Reciente</h2>
+    <%= link_to posts_path, class: "link-more" do %>
+      Ver todas las entradas <i class="fa-solid fa-arrow-right"></i>
+    <% end %>
+  </div>
+  <div class="blog-grid">
+    <% @recent_posts.each do |post| %>
+      <article class="blog-card">
+        <span class="date"><%= post.published_at&.strftime("%Y-%m-%d") %></span>
+        <h4><%= link_to post.title, post_path(post.slug) %></h4>
+        <p><%= post.description %></p>
+        <% if post.tag.present? %><span class="tag"><%= post.tag %></span><% end %>
+      </article>
+    <% end %>
+    <% if @recent_posts.empty? %>
+      <p class="empty-state">Aún no hay entradas publicadas.</p>
+    <% end %>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="section-header">
+    <h2><i class="fa-solid fa-diagram-project"></i> Proyectos</h2>
+    <%= link_to projects_path, class: "link-more" do %>
+      Ver portafolio completo <i class="fa-solid fa-arrow-right"></i>
+    <% end %>
+  </div>
+  <div class="projects-grid">
+    <% @featured_projects.each do |project| %>
+      <div class="project-card">
+        <div class="project-img">
+          <% if project.image.attached? %>
+            <%= image_tag project.image, alt: project.title %>
+          <% else %>
+            <i class="<%= project.icon.presence || 'fa-solid fa-cube' %>" style="font-size:2.8rem; color:var(--accent);"></i>
+          <% end %>
+        </div>
+        <div class="project-info">
+          <h4><%= link_to project.title, project_path(project.slug) %></h4>
+          <p><%= project.description %></p>
+          <div class="project-tech">
+            <% project.tech_list.each do |t| %><span><%= t %></span><% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <% if @featured_projects.empty? %>
+      <p class="empty-state">Aún no hay proyectos cargados.</p>
+    <% end %>
+  </div>
+</section>

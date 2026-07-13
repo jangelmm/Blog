@@ -1,0 +1,35 @@
+<% content_for :title, @project.title %>
+
+<section class="single-page">
+  <div class="single-header">
+    <h1><%= @project.title %></h1>
+    <% if @project.description.present? %><p class="single-desc"><%= @project.description %></p><% end %>
+    <div class="project-tech" style="justify-content:center; margin-top:1rem;">
+      <% @project.tech_list.each do |t| %><span><%= t %></span><% end %>
+    </div>
+  </div>
+
+  <div class="single-image">
+    <% if @project.image.attached? %>
+      <%= image_tag @project.image, alt: @project.title %>
+    <% else %>
+      <div class="project-img" style="aspect-ratio:16/9; border-radius: var(--radius);">
+        <i class="<%= @project.icon.presence || 'fa-solid fa-cube' %>" style="font-size:4rem; color:var(--accent);"></i>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="markdown-body">
+    <%= markdown(@project.body) %>
+  </div>
+
+  <% if logged_in? %>
+    <div class="admin-actions single-admin-actions">
+      <%= link_to "Editar proyecto", edit_project_path(@project.slug), class: "btn-sm" %>
+      <%= button_to "Eliminar", project_path(@project.slug), method: :delete, class: "btn-tiny btn-tiny-danger",
+                    form: { data: { turbo_confirm: "¿Eliminar este proyecto?" } } %>
+    </div>
+  <% end %>
+
+  <p><%= link_to "← Volver a proyectos", projects_path, class: "link-more" %></p>
+</section>

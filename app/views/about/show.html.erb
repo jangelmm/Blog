@@ -1,0 +1,37 @@
+<% content_for :title, "Sobre mí · #{@profile.name}" %>
+
+<section class="about-full">
+  <div class="about-home" style="grid-template-columns: 340px 1fr;">
+    <div class="about-img-wrapper">
+      <% if @profile.photo.attached? %>
+        <%= image_tag @profile.photo, alt: @profile.name %>
+      <% else %>
+        <img src="https://images.unsplash.com/photo-1518546305927-5a4bbfe3a78a?w=800&h=600&fit=crop&auto=format" alt="Foto de perfil">
+      <% end %>
+      <% if @profile.location_label.present? %>
+        <div class="about-img-overlay">
+          <i class="fa-solid fa-location-dot"></i> <%= @profile.location_label %>
+        </div>
+      <% end %>
+    </div>
+    <div class="about-content">
+      <h3><%= @profile.name %></h3>
+      <% if @profile.role.present? %>
+        <span class="role"><i class="fa-solid fa-terminal"></i> <%= @profile.role %></span>
+      <% end %>
+      <% if @profile.bio.present? %>
+        <p style="white-space: pre-line;"><%= @profile.bio %></p>
+      <% end %>
+      <% if @profile.quote.present? %>
+        <p style="font-size:0.95rem;">
+          <i class="fa-solid fa-quote-left" style="color:var(--accent); opacity:0.6;"></i>
+          <%= @profile.quote %>
+        </p>
+      <% end %>
+
+      <% if logged_in? %>
+        <%= link_to "Editar perfil", edit_about_path, class: "btn-sm" %>
+      <% end %>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,49 @@
+<%= form_with model: post, url: (post.new_record? ? posts_path : post_path(post.slug)), local: true, multipart: true, class: "admin-form" do |f| %>
+  <% if post.errors.any? %>
+    <div class="form-errors">
+      <p><strong><%= pluralize(post.errors.count, "error") %> impidieron guardar esta entrada:</strong></p>
+      <ul>
+        <% post.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title, "Título" %>
+    <%= f.text_field :title, required: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description, "Descripción corta (aparece en las tarjetas)" %>
+    <%= f.text_area :description, rows: 2 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :tag, "Etiqueta (ej: Computación Científica)" %>
+    <%= f.text_field :tag %>
+  </div>
+
+  <div class="field">
+    <%= f.label :image, "Imagen de portada" %>
+    <%= f.file_field :image, accept: "image/*" %>
+    <% if post.image.attached? %>
+      <div class="current-image"><%= image_tag post.image, alt: post.title %></div>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= f.check_box :published %>
+    <%= f.label :published, "Publicada" %>
+  </div>
+
+  <div class="field markdown-editor">
+    <%= f.label :body, "Contenido (Markdown)" %>
+    <p class="hint">Soporta encabezados <code>#</code>, <code>**negrita**</code>, <code>*cursiva*</code>, listas, enlaces, bloques de código con <code>```</code> y tablas. Se renderiza automáticamente al guardar.</p>
+    <%= f.text_area :body, rows: 18, placeholder: "# Título\n\nEscribe tu contenido en **Markdown**..." %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit (post.new_record? ? "Publicar entrada" : "Guardar cambios"), class: "btn-primary" %>
+    <%= link_to "Cancelar", posts_path, class: "btn-outline" %>
+  </div>
+<% end %>

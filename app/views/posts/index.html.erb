@@ -1,0 +1,35 @@
+<section id="blog">
+  <div class="section-header">
+    <h2><i class="fa-solid fa-pen-nib"></i> Blog</h2>
+    <% if logged_in? %>
+      <%= link_to new_post_path, class: "link-more" do %>
+        <i class="fa-solid fa-plus"></i> Nueva entrada
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="blog-grid">
+    <% @posts.each do |post| %>
+      <article class="blog-card">
+        <span class="date">
+          <%= post.published_at&.strftime("%Y-%m-%d") %>
+          <% unless post.published? %><em class="draft-badge">borrador</em><% end %>
+        </span>
+        <h4><%= link_to post.title, post_path(post.slug) %></h4>
+        <p><%= post.description %></p>
+        <% if post.tag.present? %><span class="tag"><%= post.tag %></span><% end %>
+
+        <% if logged_in? %>
+          <div class="admin-actions">
+            <%= link_to "Editar", edit_post_path(post.slug), class: "btn-tiny" %>
+            <%= button_to "Eliminar", post_path(post.slug), method: :delete, class: "btn-tiny btn-tiny-danger",
+                          form: { data: { turbo_confirm: "¿Eliminar esta entrada?" } } %>
+          </div>
+        <% end %>
+      </article>
+    <% end %>
+    <% if @posts.empty? %>
+      <p class="empty-state">Aún no hay entradas.</p>
+    <% end %>
+  </div>
+</section>
