@@ -290,3 +290,345 @@ footer { background: var(--bg-secondary); border-top: 1px solid var(--border); p
     .blog-grid, .projects-grid { grid-template-columns: 1fr; }
     .hero-tags span { font-size: 0.75rem; padding: 0.35rem 0.8rem; }
 }
+
+/* ==========================================================================
+   OVERLEAF IDE STYLE EDITOR (ADMIN FORMS)
+   ========================================================================== */
+
+/* Rompe las restricciones de diseño de la plantilla principal */
+.ide-fullscreen-wrapper {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    padding: 0;
+}
+
+.overleaf-ide-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* Altura total de la pantalla menos tu header de 70px */
+    height: calc(100vh - var(--header-height)); 
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border);
+    margin: 0;
+    overflow: hidden;
+}
+
+.form-errors-banner {
+    background: rgba(248, 113, 113, 0.1);
+    border-bottom: 1px solid var(--danger);
+    color: var(--danger);
+    padding: 0.8rem 1.5rem;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+/* Espacio de trabajo dividido */
+.ide-workspace {
+    display: flex;
+    width: 100%;
+    flex: 1;
+    overflow: hidden; /* Crucial para evitar scroll global */
+    border-bottom: 1px solid var(--border);
+}
+
+/* Sidebar Izquierdo */
+.overleaf-sidebar {
+    width: 320px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex-shrink: 0;
+    overflow-y: auto;
+}
+
+.sidebar-section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.sidebar-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.sidebar-field label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.sidebar-field input[type="text"],
+.sidebar-field textarea,
+.sidebar-field input[type="file"] {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    padding: 0.6rem 0.8rem;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    width: 100%;
+    transition: all var(--transition);
+}
+
+.sidebar-field textarea {
+    font-family: inherit;
+    resize: vertical;
+}
+
+.sidebar-field input:focus,
+.sidebar-field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.sidebar-thumb-preview {
+    margin-top: 0.4rem;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 100px;
+}
+
+.sidebar-thumb-preview img {
+    width: 100%;
+    display: block;
+}
+
+.checkbox-field {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--bg-primary);
+    padding: 0.6rem 0.8rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-light);
+}
+
+.checkbox-field input {
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+/* Panel Central (Editor Markdown) */
+.overleaf-editor-zone {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary);
+    min-width: 0; /* Previene desbordamiento en flexbox */
+}
+
+.editor-top-toolbar {
+    height: 40px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.file-tab {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 0 1.5rem;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    border-right: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+}
+
+.toolbar-right {
+    padding-right: 1.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toolbar-right .hint-text {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* El truco del posicionamiento absoluto para Textareas en Flexbox */
+.editor-textarea-wrapper {
+    flex: 1;
+    position: relative;
+    width: 100%;
+}
+
+.ide-textarea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    resize: none;
+    padding: 2rem;
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    outline: none;
+    overflow-y: auto;
+}
+
+/* Panel Inferior (Gestión de Imágenes Adjuntas y Acciones) */
+.overleaf-bottom-tray {
+    background: var(--bg-secondary);
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    flex-shrink: 0; /* Evita que el contenedor principal aplaste este div */
+}
+
+.tray-gallery-section {
+    flex: 1;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 0.8rem 1.2rem;
+    max-width: 60%; /* Limita el ancho de la galería */
+}
+
+.tray-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.tray-header label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.tray-file-input {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.tray-thumbnails-scroll {
+    display: flex;
+    gap: 0.6rem;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+}
+
+.tray-thumb-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    padding: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    width: 80px;
+    flex-shrink: 0;
+}
+
+.tray-img-box {
+    width: 100%;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--bg-primary);
+}
+
+.tray-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tray-purge-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+/* Botones Inferiores Estilo Overleaf */
+.ide-actions-bar {
+    display: flex;
+    gap: 0.8rem;
+    padding-bottom: 0.5rem;
+}
+
+.btn-ide-primary {
+    background: var(--accent-2); 
+    color: #0a0c10;
+    padding: 0.6rem 2rem;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity var(--transition);
+}
+
+.btn-ide-primary:hover {
+    opacity: 0.85;
+}
+
+.btn-ide-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    padding: 0.6rem 1.5rem;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all var(--transition);
+}
+
+.btn-ide-secondary:hover {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 992px) {
+    .ide-workspace { flex-direction: column; }
+    .overleaf-sidebar {
+        width: 100%;
+        height: 250px; /* Alto fijo en móvil */
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    .overleaf-bottom-tray {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .tray-gallery-section { max-width: 100%; }
+}

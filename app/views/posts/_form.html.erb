@@ -1,49 +1,94 @@
-<%= form_with model: post, url: (post.new_record? ? posts_path : post_path(post.slug)), local: true, multipart: true, class: "admin-form" do |f| %>
+<%= form_with model: post, url: (post.new_record? ? posts_path : post_path(post.slug)), local: true, multipart: true, class: "overleaf-ide-container" do |f| %>
+  
   <% if post.errors.any? %>
-    <div class="form-errors">
-      <p><strong><%= pluralize(post.errors.count, "error") %> impidieron guardar esta entrada:</strong></p>
-      <ul>
-        <% post.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
-      </ul>
+    <div class="form-errors-banner">
+      <p><strong><%= pluralize(post.errors.count, "error") %> impidieron guardar:</strong></p>
+      <ul><% post.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %></ul>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :title, "Título" %>
-    <%= f.text_field :title, required: true %>
+  <div class="ide-workspace">
+    <aside class="overleaf-sidebar">
+      <div class="sidebar-section-title">ESTRUCTURA & METADATOS</div>
+      
+      <div class="sidebar-field">
+        <%= f.label :title, "Título" %>
+        <%= f.text_field :title, required: true, placeholder: "main.tex" %>
+      </div>
+
+      <div class="sidebar-field">
+        <%= f.label :path, "Ruta (Estructura)" %>
+        <%= f.text_field :path, list: "paths-existentes", required: true, placeholder: "Programacion/Ruby/Rails" %>
+        <datalist id="paths-existentes">
+          <% Post.distinct.pluck(:path).compact.sort.each do |p| %>
+            <option value="<%= p %>">
+          <% end %>
+        </datalist>
+      </div>
+
+      <div class="sidebar-field">
+        <%= f.label :description, "Descripción Corta" %>
+        <%= f.text_area :description, rows: 4, placeholder: "Extracto para tarjetas..." %>
+      </div>
+
+      <div class="sidebar-field">
+        <%= f.label :image, "Imagen de Portada" %>
+        <%= f.file_field :image, accept: "image/*" %>
+        <% if post.image.attached? %>
+          <div class="sidebar-thumb-preview">
+            <%= image_tag post.image %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="sidebar-field checkbox-field">
+        <%= f.check_box :published %>
+        <%= f.label :published, "Publicada / Visible" %>
+      </div>
+    </aside>
+
+    <main class="overleaf-editor-zone">
+      <div class="editor-top-toolbar">
+        <div class="toolbar-left">
+          <span class="file-tab active">body.md</span>
+        </div>
+        <div class="toolbar-right">
+          <span class="hint-text">Soporta # Headers, **Negrita**, ``` Code Blocks</span>
+        </div>
+      </div>
+      
+      <div class="editor-textarea-wrapper">
+        <%= f.text_area :body, placeholder: "## Próximos pasos sugeridos\n\n* Añadir partículas...\n\nEscribe aquí tu Markdown.", class: "ide-textarea" %>
+      </div>
+    </main>
   </div>
 
-  <div class="field">
-    <%= f.label :description, "Descripción corta (aparece en las tarjetas)" %>
-    <%= f.text_area :description, rows: 2 %>
-  </div>
+  <footer class="overleaf-bottom-tray">
+    <div class="tray-gallery-section">
+      <div class="tray-header">
+        <%= f.label :body_images, "Imágenes vinculadas (Obsidian Assets)" %>
+        <%= f.file_field :body_images, multiple: true, accept: "image/*", class: "tray-file-input" %>
+      </div>
 
-  <div class="field">
-    <%= f.label :tag, "Etiqueta (ej: Computación Científica)" %>
-    <%= f.text_field :tag %>
-  </div>
+      <% if post.body_images.attached? %>
+        <div class="tray-thumbnails-scroll">
+          <% post.body_images.each do |img| %>
+            <div class="tray-thumb-card">
+              <div class="tray-img-box">
+                <%= image_tag img.variant(resize_to_limit: [80, 80]) %>
+              </div>
+              <label class="tray-purge-label">
+                <%= check_box_tag "purge_images[]", img.id, false %> Eliminar
+              </label>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
 
-  <div class="field">
-    <%= f.label :image, "Imagen de portada" %>
-    <%= f.file_field :image, accept: "image/*" %>
-    <% if post.image.attached? %>
-      <div class="current-image"><%= image_tag post.image, alt: post.title %></div>
-    <% end %>
-  </div>
-
-  <div class="field">
-    <%= f.check_box :published %>
-    <%= f.label :published, "Publicada" %>
-  </div>
-
-  <div class="field markdown-editor">
-    <%= f.label :body, "Contenido (Markdown)" %>
-    <p class="hint">Soporta encabezados <code>#</code>, <code>**negrita**</code>, <code>*cursiva*</code>, listas, enlaces, bloques de código con <code>```</code> y tablas. Se renderiza automáticamente al guardar.</p>
-    <%= f.text_area :body, rows: 18, placeholder: "# Título\n\nEscribe tu contenido en **Markdown**..." %>
-  </div>
-
-  <div class="form-actions">
-    <%= f.submit (post.new_record? ? "Publicar entrada" : "Guardar cambios"), class: "btn-primary" %>
-    <%= link_to "Cancelar", posts_path, class: "btn-outline" %>
-  </div>
+    <div class="ide-actions-bar">
+      <%= link_to "Cancelar", posts_path, class: "btn-ide-secondary" %>
+      <%= f.submit (post.new_record? ? "Compilar & Publicar" : "Recompilar (Guardar)"), class: "btn-ide-primary" %>
+    </div>
+  </footer>
 <% end %>

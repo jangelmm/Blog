@@ -68,9 +68,8 @@
     <% @recent_posts.each do |post| %>
       <article class="blog-card">
         <span class="date"><%= post.published_at&.strftime("%Y-%m-%d") %></span>
-        <h4><%= link_to post.title, post_path(post.slug) %></h4>
+        <h4><%= link_to post.title, post_show_path(path: post.path, slug: post.slug) %></h4>
         <p><%= post.description %></p>
-        <% if post.tag.present? %><span class="tag"><%= post.tag %></span><% end %>
       </article>
     <% end %>
     <% if @recent_posts.empty? %>

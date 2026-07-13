@@ -1,0 +1,23 @@
+<!-- app/views/posts/_tree_node.html.erb -->
+<ul class="tree-list">
+  <% node.each do |key, value| %>
+    <% next if key == :_posts %>
+    <li>
+      <strong><%= key %></strong>
+      <%= render partial: "tree_node", locals: { node: value } %>
+    </li>
+  <% end %>
+</ul>
+<% (node[:_posts] || []).each do |post| %>
+  <div class="tree-post">
+    — <%= link_to post.title, post_show_path(path: post.path, slug: post.slug) %>
+    <% unless post.published? %><em class="draft-badge">borrador</em><% end %>
+    <% if logged_in? %>
+      <span class="admin-actions" style="display:inline-flex; gap:0.4rem; margin-left:0.5rem;">
+        <%= link_to "Editar", edit_post_path(post.slug), class: "btn-tiny" %>
+        <%= button_to "Eliminar", post_path(post.slug), method: :delete, class: "btn-tiny btn-tiny-danger",
+                      form: { data: { turbo_confirm: "¿Eliminar esta entrada?" } } %>
+      </span>
+    <% end %>
+  </div>
+<% end %>

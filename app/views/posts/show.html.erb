@@ -3,7 +3,6 @@
 <section class="single-page">
   <div class="single-header">
     <span class="date"><%= @post.published_at&.strftime("%d de %B, %Y") %></span>
-    <% if @post.tag.present? %><span class="tag"><%= @post.tag %></span><% end %>
     <h1><%= @post.title %></h1>
     <% if @post.description.present? %><p class="single-desc"><%= @post.description %></p><% end %>
   </div>

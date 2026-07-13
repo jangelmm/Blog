@@ -43,12 +43,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_13_014736) do
     t.text "body"
     t.datetime "created_at", null: false
     t.text "description"
+    t.string "path"
     t.boolean "published", default: true, null: false
     t.datetime "published_at"
     t.string "slug", null: false
-    t.string "tag"
     t.string "title", null: false
     t.datetime "updated_at", null: false
+    t.index ["path"], name: "index_posts_on_path"
     t.index ["slug"], name: "index_posts_on_slug", unique: true
   end
 

@@ -1,0 +1,5 @@
+<!-- app/views/posts/tree.html.erb -->
+<section id="tree-view">
+  <h2><i class="fa-solid fa-folder-tree"></i> <%= params[:path] %></h2>
+  <%= render partial: "tree_node", locals: { node: @tree } %>
+</section>
