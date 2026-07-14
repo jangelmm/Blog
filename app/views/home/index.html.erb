@@ -44,7 +44,7 @@
         <span class="role"><i class="fa-solid fa-terminal"></i> <%= @profile.role %></span>
       <% end %>
       <% if @profile.bio.present? %>
-        <p><%= @profile.bio %></p>
+        <p><%= truncate(@profile.bio, length: 280, separator: ' ') %></p>
       <% end %>
       <% if @profile.quote.present? %>
         <p style="font-size:0.9rem;">
