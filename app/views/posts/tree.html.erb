@@ -11,47 +11,66 @@
     <% if @tree.empty? %>
       <p class="empty-state">Esta sección no contiene entradas ni subcarpetas todavía.</p>
     <% else %>
-      <ul class="tree-root-list" style="list-style: none; padding: 0;">
-        <%# Renderizamos recursivamente usando el partial existente o una iteración limpia %>
+      <ul class="tree-root-list" style="list-style: none; padding: 0; margin: 0;">
+        
         <% @tree.each do |name, node| %>
           <% next if name == :_posts %>
-          <li class="tree-folder-node" style="margin-bottom: 1rem;">
-            <div class="folder-header" style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary); font-weight: 600;">
-              <i class="fa-solid fa-folder" style="color: var(--accent);"></i>
-              <span><%= name.capitalize %></span>
-            </div>
-            
-            <%# Listar posts dentro de este nodo si existen %>
-            <% if node.is_a?(Hash) && node[:_posts].present? %>
-              <ul class="tree-posts-list" style="list-style: none; padding-left: 1.5rem; margin-top: 0.4rem;">
-                <% node[:_posts].each do |post| %>
-                  <li style="margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.5rem;">
-                    <i class="fa-solid fa-file-lines" style="color: var(--text-muted); font-size: 0.85rem;"></i>
-                    <%= link_to post.title, post_show_path(path: post.path, slug: post.slug), 
-                                style: "color: var(--accent); text-decoration: none; font-size: 0.95rem;", 
-                                class: "tree-post-link" %>
-                    <% unless post.published? %>
-                      <span class="draft-badge" style="font-size: 0.75rem; background: rgba(248, 113, 113, 0.1); padding: 0.1rem 0.4rem; border-radius: 4px;">Borrador</span>
-                    <% end %>
-                  </li>
-                <% end %>
-              </ul>
-            <% end %>
+          
+          <li style="margin-bottom: 1rem;">
+            <%# Usamos <details> para hacer la carpeta colapsable nativamente. 
+                Añade 'open' al final de la etiqueta si quieres que inicien abiertas por defecto %>
+            <details class="tree-folder-node">
+              <summary class="folder-header" style="display: flex; align-items: center; gap: 0.6rem; color: var(--text-primary); font-weight: 600; cursor: pointer; user-select: none; padding: 0.4rem 0;">
+                <i class="fa-solid fa-folder" style="color: var(--accent);"></i>
+                <span style="transition: color var(--transition);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-primary)'">
+                  <%= name.capitalize %>
+                </span>
+              </summary>
+              
+              <%# Contenido de la carpeta (se oculta/muestra al hacer clic) %>
+              <% if node.is_a?(Hash) && node[:_posts].present? %>
+                <ul class="tree-posts-list" style="list-style: none; padding-left: 1.8rem; margin-top: 0.5rem; border-left: 2px solid var(--border-light); margin-left: 0.4rem;">
+                  <% node[:_posts].each do |post| %>
+                    <li style="margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.6rem;">
+                      <i class="fa-solid fa-file-code" style="color: var(--text-muted); font-size: 0.85rem;"></i>
+                      <%= link_to post.title, post_show_path(path: post.path, slug: post.slug), 
+                                  style: "color: var(--accent); text-decoration: none; font-size: 0.95rem; transition: all var(--transition);", 
+                                  onmouseover: "this.style.filter='brightness(1.2)'",
+                                  onmouseout: "this.style.filter='none'" %>
+                      
+                      <% unless post.published? %>
+                        <span class="draft-badge" style="font-size: 0.7rem; background: rgba(248, 113, 113, 0.1); color: var(--danger); padding: 0.15rem 0.5rem; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px;">Borrador</span>
+                      <% end %>
+                    </li>
+                  <% end %>
+                </ul>
+              <% end %>
+            </details>
           </li>
         <% end %>
 
-        <%# Posts en la raíz de esta carpeta específica %>
+        <%# Artículos que pertenecen directamente a la raíz actual %>
         <% if @tree[:_posts].present? %>
-          <% @tree[:_posts].each do |post| %>
-            <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-              <i class="fa-solid fa-file-lines" style="color: var(--accent-2); font-size: 0.9rem;"></i>
-              <%= link_to post.title, post_show_path(path: post.path, slug: post.slug), 
-                          style: "color: var(--text-primary); text-decoration: none; font-weight: 500;", 
-                          class: "tree-post-link" %>
-            </li>
-          <% end %>
+          <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+            <% @tree[:_posts].each do |post| %>
+              <li style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.6rem;">
+                <i class="fa-solid fa-file-lines" style="color: var(--accent-2); font-size: 0.9rem;"></i>
+                <%= link_to post.title, post_show_path(path: post.path, slug: post.slug), 
+                            style: "color: var(--text-primary); text-decoration: none; font-weight: 500; transition: color var(--transition);", 
+                            onmouseover: "this.style.color='var(--accent-2)'",
+                            onmouseout: "this.style.color='var(--text-primary)'" %>
+              </li>
+            <% end %>
+          </div>
         <% end %>
+
       </ul>
     <% end %>
   </div>
+  
+  <%# Estilo en línea para ocultar la flecha fea por defecto del <summary> en algunos navegadores %>
+  <style>
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+  </style>
 </section>
