@@ -770,3 +770,168 @@ footer { background: var(--bg-secondary); border-top: 1px solid var(--border); p
         right: -30px;
     }
 }
+
+/* ==========================================================================
+   BLOG TREE EXPLORER
+   ========================================================================== */
+
+.blog-tree-page .tree-search-wrapper {
+  position: relative;
+  margin-bottom: 1.6rem;
+}
+.blog-tree-page .tree-search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+.blog-tree-page .tree-search-input {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem 0.75rem 2.6rem;
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.blog-tree-page .tree-search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.blog-tree-page .tree-search-input::placeholder { color: var(--text-muted); }
+
+.tree-explorer {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.6rem;
+  box-shadow: var(--shadow-card);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.92rem;
+}
+
+/* Listas anidadas: indentación real con guía vertical */
+.tree-explorer .tree-list {
+  list-style: none;
+  margin: 0;
+  padding-left: 1.35rem;
+  border-left: 1px dashed var(--border-light);
+}
+.tree-explorer > .tree-list {
+  padding-left: 0;
+  border-left: none;
+}
+
+.tree-explorer .tree-list li {
+  position: relative;
+  margin: 0.15rem 0;
+  padding: 0.15rem 0 0.15rem 0.4rem;
+}
+
+/* Carpetas (clicables para colapsar/expandir, estilo Obsidian) */
+.tree-explorer .tree-list > li > strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  padding: 0.3rem 0.4rem;
+  margin-left: -0.4rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--transition);
+}
+.tree-explorer .tree-list > li > strong:hover {
+  background: var(--bg-card-hover);
+}
+.tree-explorer .tree-list > li > strong::before {
+  content: "\f07c"; 
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  color: var(--accent);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  transition: transform var(--transition);
+}
+/* Caret que indica expandido/colapsado */
+.tree-explorer .tree-list > li > strong::after {
+  content: "\f078"; 
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-left: 0.15rem;
+  transition: transform var(--transition);
+}
+
+/* Estado colapsado */
+.tree-explorer .tree-list > li.is-collapsed > strong::before {
+  content: "\f07b"; 
+}
+.tree-explorer .tree-list > li.is-collapsed > strong::after {
+  transform: rotate(-90deg);
+}
+.tree-explorer .tree-list > li.is-collapsed > .tree-list,
+.tree-explorer .tree-list > li.is-collapsed > .tree-post {
+  display: none;
+}
+
+/* Entradas (hojas) */
+.tree-explorer .tree-post {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.6rem;
+  margin: 0.1rem 0 0.1rem 1.35rem;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+}
+.tree-explorer .tree-post:hover {
+  background: var(--bg-card-hover);
+}
+.tree-explorer .tree-post::before {
+  content: "\f15c"; 
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+.tree-explorer .tree-post a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+}
+.tree-explorer .tree-post a:hover { color: var(--accent); }
+
+.tree-explorer .draft-badge {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--danger);
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  padding: 0.1rem 0.5rem;
+  border-radius: 50px;
+}
+
+.tree-explorer .tree-post .admin-actions {
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.tree-explorer .tree-post:hover .admin-actions { opacity: 1; }
+
+.tree-explorer .empty-state {
+  font-family: 'Inter', sans-serif;
+  padding: 0.5rem 0.2rem;
+}

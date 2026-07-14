@@ -1,5 +1,4 @@
 class ErrorsController < ApplicationController
-  # No requerimos inicio de sesión para ver los errores
   skip_before_action :require_login, raise: false
 
   def not_found

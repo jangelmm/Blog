@@ -11,8 +11,6 @@ class ApplicationController < ActionController::Base
     current_user.present?
   end
 
-  # Úsalo como before_action en los controladores donde
-  # solo tú (el admin) puedas crear / editar / eliminar.
   def require_login
     return if logged_in?
 

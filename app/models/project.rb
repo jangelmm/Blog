@@ -7,7 +7,6 @@ class Project < ApplicationRecord
 
   scope :ordered, -> { order(position: :asc, created_at: :desc) }
 
-  # Devuelve el tech_stack como array de strings limpio
   def tech_list
     (tech_stack || "").split(",").map(&:strip).reject(&:blank?)
   end
