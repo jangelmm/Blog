@@ -70,6 +70,7 @@
 
           if (nameMatches || hasVisiblePost || hasVisibleSubfolder) {
             li.style.display = "";
+            li.classList.remove("is-collapsed"); 
             changed = true;
           }
         });

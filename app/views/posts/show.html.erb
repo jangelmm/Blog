@@ -17,6 +17,67 @@
     <%= markdown(@post.body, @post) %>
   </div>
 
+  <div class="post-citation-card" id="citation-block">
+  <div class="citation-content">
+    <div class="citation-header">
+      <h3 class="citation-title"><%= @post.title %></h3>
+      <button class="btn-copy-citation" id="copyCitationBtn" title="Copiar cita en formato APA">
+        <i class="fa-regular fa-copy"></i> Copiar
+      </button>
+    </div>
+    
+    <div class="citation-url">
+      <%= link_to request.original_url, request.original_url, class: "url-link" %>
+    </div>
+    
+    <div class="citation-metadata">
+      <div class="meta-group">
+        <span class="meta-label">Autor</span>
+        <span class="meta-value"><%= Profile.first&.name || "Jesús Ángel Martínez Mendoza" %></span>
+      </div>
+      <div class="meta-group">
+        <span class="meta-label">Publicado</span>
+        <span class="meta-value"><%= (@post.published_at || @post.created_at).strftime("%Y-%m-%d") %></span>
+      </div>
+      <div class="meta-group">
+        <span class="meta-label">Licencia</span>
+        <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer" class="meta-value license-link">
+          CC BY-NC-SA 4.0
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <i class="fa-brands fa-creative-commons bg-cc-icon"></i>
+</div>
+
+<script>
+  // Script para copiar la cita al portapapeles en formato APA
+  document.getElementById('copyCitationBtn').addEventListener('click', function() {
+    const author = "<%= Profile.first&.name || 'Martínez Mendoza, J. Á.' %>";
+    const date = "<%= (@post.published_at || @post.created_at).strftime('%Y, %d de %B') %>";
+    const title = "<%= @post.title %>";
+    const url = "<%= request.original_url %>";
+    
+    // Construcción de la cita tipo APA
+    const citationText = `${author}. (${date}). ${title}. Recuperado de ${url}`;
+    
+    navigator.clipboard.writeText(citationText).then(() => {
+      const btn = this;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
+      btn.style.color = "var(--accent-2)"; // Verde de éxito
+      btn.style.borderColor = "var(--accent-2)";
+      
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.color = "";
+        btn.style.borderColor = "";
+      }, 2000);
+    });
+  });
+</script>
+
   <% if logged_in? %>
     <div class="admin-actions single-admin-actions">
       <%= link_to "Editar entrada", edit_post_path(@post.slug), class: "btn-sm" %>

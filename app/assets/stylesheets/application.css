@@ -632,3 +632,141 @@ footer { background: var(--bg-secondary); border-top: 1px solid var(--border); p
     }
     .tray-gallery-section { max-width: 100%; }
 }
+
+/* ==========================================================================
+   BLOQUE DE CITACIÓN BIBLIOGRÁFICA
+   ========================================================================== */
+
+.post-citation-card {
+    position: relative;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 1.8rem 2rem;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+    overflow: hidden; /* Crucial para recortar el ícono de fondo */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.citation-content {
+    position: relative;
+    z-index: 2; /* Mantiene el texto por encima del ícono de fondo */
+}
+
+.citation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.citation-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.btn-copy-citation {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+
+.btn-copy-citation:hover {
+    color: var(--text-primary);
+    border-color: var(--accent);
+    background: rgba(77, 168, 218, 0.05);
+}
+
+.citation-url {
+    margin-bottom: 1.5rem;
+}
+
+.citation-url .url-link {
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color var(--transition);
+    word-break: break-all;
+}
+
+.citation-url .url-link:hover {
+    text-decoration-color: var(--accent);
+}
+
+.citation-metadata {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 1.2rem;
+}
+
+.meta-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.meta-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.meta-value {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.license-link {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.license-link:hover {
+    text-decoration: underline;
+}
+
+/* Marca de agua del ícono CC */
+.bg-cc-icon {
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14rem;
+    color: rgba(255, 255, 255, 0.02); /* Súper transparente */
+    z-index: 1;
+    pointer-events: none;
+}
+
+@media (max-width: 600px) {
+    .citation-metadata {
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+    .bg-cc-icon {
+        font-size: 10rem;
+        right: -30px;
+    }
+}
