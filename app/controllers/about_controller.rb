@@ -1,5 +1,5 @@
 class AboutController < ApplicationController
-  before_action :require_login, only: [:edit, :update]
+  before_action :require_login, only: [ :edit, :update ]
 
   def show
     @profile = Profile.first_or_create!(name: "Tu nombre")

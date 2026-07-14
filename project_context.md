@@ -11,6 +11,7 @@ mi_blog
 │   │   ├── concerns
 │   │   ├── about_controller.rb
 │   │   ├── application_controller.rb
+│   │   ├── errors_controller.rb
 │   │   ├── home_controller.rb
 │   │   ├── posts_controller.rb
 │   │   ├── projects_controller.rb
@@ -22,7 +23,8 @@ mi_blog
 │   │   ├── controllers
 │   │   │   ├── application.js
 │   │   │   ├── hello_controller.js
-│   │   │   └── index.js
+│   │   │   ├── index.js
+│   │   │   └── tree_controller.js
 │   │   └── application.js
 │   ├── jobs
 │   │   └── application_job.rb
@@ -40,6 +42,8 @@ mi_blog
 │       ├── about
 │       │   ├── edit.html.erb
 │       │   └── show.html.erb
+│       ├── errors
+│       │   └── not_found.html.erb
 │       ├── home
 │       │   └── index.html.erb
 │       ├── layouts
@@ -117,9 +121,9 @@ mi_blog
 ├── README.md
 ├── Rakefile
 ├── blog_context.md
-├── citlara_context.md
 ├── config.ru
-└── dump.py
+├── dump.py
+└── project_context.md
 ```
 
 ## `.gitignore`
@@ -814,12 +818,27 @@ class ApplicationController < ActionController::Base
     current_user.present?
   end
 
-  # Úsalo como before_action en los controladores donde
-  # solo tú (el admin) puedas crear / editar / eliminar.
   def require_login
     return if logged_in?
 
     redirect_to login_path, alert: "Necesitas iniciar sesión para hacer eso."
+  end
+end
+
+```
+
+## `app/controllers/errors_controller.rb`
+
+```ruby
+class ErrorsController < ApplicationController
+  skip_before_action :require_login, raise: false
+
+  def not_found
+    render status: :not_found
+  end
+
+  def internal_server_error
+    render status: :internal_server_error
   end
 end
 
@@ -842,6 +861,7 @@ end
 
 ```ruby
 class PostsController < ApplicationController
+  include PostsHelper
   before_action :require_login, except: [ :index, :show, :tree ]
   before_action :set_post, only: [ :edit, :update, :destroy ]
 
@@ -852,7 +872,18 @@ class PostsController < ApplicationController
   def show
     @post = Post.find_by!(path: params[:path], slug: params[:slug])
   rescue ActiveRecord::RecordNotFound
-    redirect_to post_tree_path(path: params[:path]), alert: "Esa entrada ya no existe. Aquí tienes el árbol de esta sección."
+    ruta_intentada = "#{params[:path]}/#{params[:slug]}".chomp("/")
+
+    @posts = Post.where("path = ? OR path LIKE ?", ruta_intentada, "#{ruta_intentada}/%")
+
+    if @posts.exists?
+      @tree = build_tree(@posts, ruta_intentada)
+      params[:path] = ruta_intentada
+
+      render :tree
+    else
+      render template: "errors/not_found", status: :not_found
+    end
   end
 
   def tree
@@ -879,6 +910,12 @@ class PostsController < ApplicationController
   end
 
   def update
+    if params[:purge_images].present?
+      params[:purge_images].each do |image_id|
+        image = @post.body_images.find_by(id: image_id)
+        image.purge if image
+      end
+    end
     if @post.update(post_params)
       redirect_to post_show_path(path: @post.path, slug: @post.slug), notice: "Entrada actualizada."
     else
@@ -996,11 +1033,31 @@ end
 ## `app/helpers/application_helper.rb`
 
 ```ruby
+# app/helpers/application_helper.rb
 module ApplicationHelper
-  # Convierte texto Markdown a HTML seguro usando Redcarpet
-  # (GitHub-like: tablas, bloques de código, tachado, autolinks...)
-  def markdown(text)
+  # Modificamos el método para aceptar el 'post' como segundo parámetro
+  def markdown(text, post = nil)
     return "".html_safe if text.blank?
+
+    # --- INICIO MAGIA PARA OBSIDIAN ---
+    # Si pasamos el post y tiene imágenes, buscamos y reemplazamos la sintaxis ![[...]]
+    if post.present? && post.body_images.attached?
+      text = text.gsub(/!\[\[(.*?)\]\]/) do |match|
+        filename = $1 # Captura el nombre del archivo, ej: "imagen-test.png"
+
+        # Buscamos si existe una imagen adjunta con ese nombre exacto
+        attached_image = post.body_images.find { |img| img.filename.to_s == filename }
+
+        if attached_image
+          # Si existe, lo convertimos a Markdown estándar inyectando la ruta de Rails
+          "![#{filename}](#{url_for(attached_image)})"
+        else
+          # Si la imagen no está adjunta en el post, lo dejamos como estaba
+          match
+        end
+      end
+    end
+    # --- FIN MAGIA PARA OBSIDIAN ---
 
     renderer = Redcarpet::Render::HTML.new(
       filter_html: false,
@@ -1135,7 +1192,6 @@ class Project < ApplicationRecord
 
   scope :ordered, -> { order(position: :asc, created_at: :desc) }
 
-  # Devuelve el tech_stack como array de strings limpio
   def tech_list
     (tech_stack || "").split(",").map(&:strip).reject(&:blank?)
   end
@@ -1229,6 +1285,7 @@ module MiBlog
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+    config.exceptions_app = self.routes
   end
 end
 
@@ -1375,6 +1432,9 @@ Rails.application.routes.draw do
       constraints: { path: /[^\/]+(\/[^\/]+)*/ }
   get "blog/*path", to: "posts#tree", as: :post_tree,
       constraints: { path: /.+/ }
+
+  match "/404", to: "errors#not_found", via: :all
+  match "/500", to: "errors#internal_server_error", via: :all
 end
 
 ```

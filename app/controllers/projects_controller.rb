@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
-  before_action :require_login, except: [:index, :show]
-  before_action :set_project, only: [:show, :edit, :update, :destroy]
+  before_action :require_login, except: [ :index, :show ]
+  before_action :set_project, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @projects = Project.ordered

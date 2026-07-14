@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= content_for?(:title) ? yield(:title) : "#{@profile&.name || 'Mi Blog'} · Software Científico & SaaS" %></title>
+  <%= favicon_link_tag 'atom.png' %>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
@@ -62,8 +63,8 @@
     <div class="footer-inner">
       <div class="footer-links">
         <%= link_to root_path do %><i class="fa-solid fa-house"></i> Inicio<% end %>
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> GitHub</a>
-        <a href="mailto:tu-correo@ejemplo.com"><i class="fa-solid fa-envelope"></i> Contacto</a>
+        <a href="https://github.com/jangelmm" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> GitHub</a>
+        <a href="mailto:jesusangelmartinezmendoza0702@gmail.com"><i class="fa-solid fa-envelope"></i> Contacto</a>
       </div>
       <p class="copyright">
         © <span><%= Date.current.year %></span> <%= @profile&.name || "Mi Blog" %> · Todos los derechos reservados.
