@@ -14,7 +14,9 @@
   <% end %>
 
   <div class="markdown-body">
-    <%= markdown(@post.body, @post) %>
+    <article class="post-content" data-controller="math">
+      <%= markdown(@post.body, @post) %>
+    </article>
   </div>
 
   <div class="post-citation-card" id="citation-block">
