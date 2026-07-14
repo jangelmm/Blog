@@ -2,7 +2,7 @@
 service: mi_blog
 
 # Name of the container image (use your-user/app-name on external registries).
-image: mi_blog
+image: jangelmm/blog
 
 # Deploy to these servers.
 servers:
