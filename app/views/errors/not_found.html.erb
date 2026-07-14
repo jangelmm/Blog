@@ -1,0 +1,18 @@
+<section class="hero-error-clean" style="max-width: var(--max-width); margin: 0 auto; padding: 6rem 1.8rem; text-align: center; min-height: 65vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+  <div class="hero-badge" style="background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); color: var(--danger); padding: 0.4rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 500; margin-bottom: 1.5rem; font-family: 'JetBrains Mono', monospace;">
+    STATUS :: 404 NOT FOUND
+  </div>
+  
+  <h1 style="font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 1rem; letter-spacing: -1px;">
+    La ruta especificada <span class="highlight" style="background: linear-gradient(135deg, var(--danger), #ff9494); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">no existe</span>
+  </h1>
+  
+  <p class="hero-subtitle" style="font-size: 1.1rem; color: var(--text-secondary); max-width: 580px; margin: 0 auto 2.5rem;">
+    El recurso que buscas fue movido de sección, renombrado o nunca existió en este servidor.
+  </p>
+  
+  <div class="error-actions">
+    <%= link_to "Regresar al inicio", root_path, class: "btn-primary" %>
+    <%= link_to "Ver últimas entradas", posts_path, class: "btn-outline" %>
+  </div>
+</section>

@@ -1,5 +1,57 @@
-<!-- app/views/posts/tree.html.erb -->
-<section id="tree-view">
-  <h2><i class="fa-solid fa-folder-tree"></i> <%= params[:path] %></h2>
-  <%= render partial: "tree_node", locals: { node: @tree } %>
+<section class="posts-tree-section" style="max-width: var(--max-width); margin: 0 auto; padding: 3rem 1.8rem;">
+  <div class="section-header">
+    <h2>
+      <i class="fa-solid fa-folder-open" style="color: var(--accent); margin-right: 0.5rem;"></i>
+      Índice de: <span style="font-family: 'JetBrains Mono', monospace; color: var(--text-secondary);"><%= params[:path] %>/</span>
+    </h2>
+    <%= link_to "Volver al blog", posts_path, class: "link-more" %>
+  </div>
+
+  <div class="tree-explorer-container" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-card);">
+    <% if @tree.empty? %>
+      <p class="empty-state">Esta sección no contiene entradas ni subcarpetas todavía.</p>
+    <% else %>
+      <ul class="tree-root-list" style="list-style: none; padding: 0;">
+        <%# Renderizamos recursivamente usando el partial existente o una iteración limpia %>
+        <% @tree.each do |name, node| %>
+          <% next if name == :_posts %>
+          <li class="tree-folder-node" style="margin-bottom: 1rem;">
+            <div class="folder-header" style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary); font-weight: 600;">
+              <i class="fa-solid fa-folder" style="color: var(--accent);"></i>
+              <span><%= name.capitalize %></span>
+            </div>
+            
+            <%# Listar posts dentro de este nodo si existen %>
+            <% if node.is_a?(Hash) && node[:_posts].present? %>
+              <ul class="tree-posts-list" style="list-style: none; padding-left: 1.5rem; margin-top: 0.4rem;">
+                <% node[:_posts].each do |post| %>
+                  <li style="margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fa-solid fa-file-lines" style="color: var(--text-muted); font-size: 0.85rem;"></i>
+                    <%= link_to post.title, post_show_path(path: post.path, slug: post.slug), 
+                                style: "color: var(--accent); text-decoration: none; font-size: 0.95rem;", 
+                                class: "tree-post-link" %>
+                    <% unless post.published? %>
+                      <span class="draft-badge" style="font-size: 0.75rem; background: rgba(248, 113, 113, 0.1); padding: 0.1rem 0.4rem; border-radius: 4px;">Borrador</span>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            <% end %>
+          </li>
+        <% end %>
+
+        <%# Posts en la raíz de esta carpeta específica %>
+        <% if @tree[:_posts].present? %>
+          <% @tree[:_posts].each do |post| %>
+            <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-file-lines" style="color: var(--accent-2); font-size: 0.9rem;"></i>
+              <%= link_to post.title, post_show_path(path: post.path, slug: post.slug), 
+                          style: "color: var(--text-primary); text-decoration: none; font-weight: 500;", 
+                          class: "tree-post-link" %>
+            </li>
+          <% end %>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
 </section>

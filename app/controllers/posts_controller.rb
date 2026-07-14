@@ -1,4 +1,5 @@
 class PostsController < ApplicationController
+  include PostsHelper
   before_action :require_login, except: [ :index, :show, :tree ]
   before_action :set_post, only: [ :edit, :update, :destroy ]
 
