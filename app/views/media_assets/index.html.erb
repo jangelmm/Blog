@@ -14,7 +14,7 @@
       
       <div class="file-input-wrapper" style="flex-grow: 1; display: flex; align-items: center; gap: 10px; background-color: #010409; border: 1px solid #30363d; padding: 0.6rem 1rem; border-radius: 6px;">
         <i class="fa-solid fa-cloud-arrow-up" style="color: #8b949e;"></i>
-        <%= form.file_field :files, multiple: true, name: "files[]", required: true, class: "custom-file-input", style: "color: #c9d1d9; width: 100%; font-family: monospace; cursor: pointer; outline: none;", accept: "image/*" %>%>
+        <%= form.file_field :files, multiple: true, name: "files[]", required: true, class: "custom-file-input", style: "color: #c9d1d9; width: 100%; font-family: monospace; cursor: pointer; outline: none;", accept: "image/*" %>
       </div>
       
       <%= form.submit "Subir Archivo", class: "btn-ide-primary", style: "padding: 0.6rem 1.5rem; white-space: nowrap;" %>

@@ -12,9 +12,9 @@
     --danger: #f87171;
     --border: #252a35;
     --border-light: #2e3540;
-    --radius-sm: 8px;
-    --radius: 12px;
-    --radius-lg: 18px;
+    --radius-sm: 4px;  /* Reducido para un look más "IDE" */
+    --radius: 8px;     /* Reducido de 12px a 8px */
+    --radius-lg: 12px; /* Reducido de 18px a 12px */
     --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
     --shadow-glow: 0 0 40px rgba(77, 168, 218, 0.15);
     --transition: 0.25s ease;
@@ -34,7 +34,7 @@ body {
 }
 
 /* ==========================================================================
-   SISTEMA UNIFICADO DE BOTONES & PARCHE DE RAILS
+   SISTEMA UNIFICADO DE BOTONES (CUADRADOS / ESTILO IDE)
    ========================================================================== */
 
 /* 1. Base compartida (Alineación perfecta) */
@@ -46,39 +46,53 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.4rem; /* Espacio exacto entre ícono y texto */
+    gap: 0.5rem;
     text-align: center;
     text-decoration: none;
     font-family: inherit;
-    white-space: nowrap; /* Evita que el texto baje a otra línea */
+    white-space: nowrap;
     cursor: pointer;
     transition: all var(--transition);
     outline: none;
-    border: 2px solid transparent; /* Borde por defecto para evitar saltos */
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm); /* Todos los botones cuadrados (4px) */
 }
 
-/* 2. Tamaños y formas */
+/* 2. Tamaños estandarizados por categorías */
+
+/* Botones Grandes (Hero, Formularios principales) */
 .btn-primary, .btn-outline {
-    padding: 0.8rem 2rem; border-radius: 50px; font-weight: 600; font-size: 1rem;
+    padding: 0.7rem 1.6rem; 
+    font-weight: 600; 
+    font-size: 0.95rem;
 }
-.btn-header, .btn-header-outline, .btn-logout, .btn-sm {
-    padding: 0.5rem 1.25rem; border-radius: 50px; font-weight: 600; font-size: 0.9rem;
+
+/* Botones Medianos (Header, IDE, Acciones secundarias) */
+.btn-header, .btn-header-outline, .btn-logout, 
+.btn-sm, .btn-ide-primary, .btn-ide-secondary {
+    padding: 0.5rem 1.2rem; 
+    font-weight: 600; 
+    font-size: 0.85rem; 
+    border-width: 1px;
 }
-.btn-ide-primary, .btn-ide-secondary {
-    padding: 0.6rem 1.5rem; border-radius: 4px; font-weight: 600; font-size: 0.9rem; border-width: 1px;
+
+/* Botones Pequeños (Tarjetas, Citas, Editar/Eliminar) - ¡MISMAS DIMENSIONES! */
+.btn-tiny, .btn-tiny-danger, .btn-copy-citation {
+    padding: 0.4rem 0.8rem; 
+    font-weight: 600; 
+    font-size: 0.8rem; 
+    border-width: 1px;
 }
-.btn-tiny, .btn-tiny-danger {
-    padding: 0.35rem 0.85rem; border-radius: 50px; font-weight: 600; font-size: 0.78rem; border-width: 1px;
-}
-.btn-copy-citation {
-    padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: 500; font-size: 0.8rem; border-width: 1px;
-}
+
+/* Botones de solo ícono */
 .btn-ide-danger-icon {
-    padding: 0.6rem; border-radius: 6px; font-size: 1rem; border-width: 1px;
+    padding: 0.5rem; 
+    font-size: 1rem; 
+    border-width: 1px;
 }
 
 /* 3. Colores y efectos (Hover) */
-.btn-primary { background: var(--accent); color: #0a0c10; box-shadow: 0 4px 20px rgba(77, 168, 218, 0.3); }
+.btn-primary { background: var(--accent); color: #0a0c10; box-shadow: 0 4px 20px rgba(77, 168, 218, 0.2); }
 .btn-primary:hover { background: transparent; color: var(--accent); border-color: var(--accent); box-shadow: var(--shadow-glow); }
 
 .btn-outline { background: transparent; border-color: var(--border-light); color: var(--text-primary); }
@@ -93,11 +107,11 @@ body {
 .btn-logout { background: transparent; border-color: var(--danger); color: var(--danger); }
 .btn-logout:hover { background: var(--danger); color: #0a0c10; }
 
-.btn-sm { background: var(--accent); color: #0a0c10; }
+.btn-sm { background: var(--accent); color: #0a0c10; border-color: var(--accent); }
 .btn-sm:hover { background: transparent; color: var(--accent); border-color: var(--accent); }
 
-.btn-ide-primary { background: var(--accent-2); color: #0a0c10; }
-.btn-ide-primary:hover { opacity: 0.85; }
+.btn-ide-primary { background: var(--accent-2); color: #0a0c10; border-color: var(--accent-2); }
+.btn-ide-primary:hover { background: transparent; color: var(--accent-2); }
 
 .btn-ide-secondary { background: transparent; color: var(--text-secondary); border-color: var(--border-light); }
 .btn-ide-secondary:hover { color: var(--text-primary); border-color: var(--text-secondary); }
@@ -115,8 +129,6 @@ body {
 .btn-ide-danger-icon:hover { color: var(--danger); background: rgba(248, 113, 113, 0.1); border-color: rgba(248, 113, 113, 0.3); }
 
 /* 4. EL PARCHE MÁGICO PARA RAILS */
-/* Hace que el <form> generado por button_to desaparezca de la cuadrícula visual, 
-   permitiendo que el botón se alinee junto al enlace (link_to) sin problemas. */
 form.button_to,
 .admin-actions form,
 .ide-actions-bar form,
@@ -125,7 +137,6 @@ form.button_to,
     display: contents;
 }
 
-/* Contenedores de grupos de botones */
 .admin-actions { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.8rem; }
 .ide-actions-bar { display: flex; gap: 0.8rem; padding-bottom: 0.5rem; align-items: center; flex-wrap: wrap; }
 
@@ -242,7 +253,7 @@ section { max-width: var(--max-width); margin: 0 auto; padding: 3rem 1.8rem 4rem
 .blog-card p { color: var(--text-secondary); font-size: 0.9rem; flex-grow: 1; margin-bottom: 1rem; }
 .blog-card .tag {
     display: inline-block; background: rgba(77, 168, 218, 0.1); color: var(--accent); padding: 0.25rem 0.7rem;
-    border-radius: 50px; font-size: 0.75rem; font-weight: 500; align-self: flex-start;
+    border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 500; align-self: flex-start;
 }
 
 /* PROJECTS */
@@ -264,19 +275,19 @@ section { max-width: var(--max-width); margin: 0 auto; padding: 3rem 1.8rem 4rem
 .project-info p { font-size: 0.85rem; color: var(--text-secondary); flex-grow: 1; margin-bottom: 0.8rem; }
 .project-tech { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .project-tech span {
-    background: var(--bg-secondary); color: var(--text-secondary); padding: 0.2rem 0.6rem; border-radius: 4px;
+    background: var(--bg-secondary); color: var(--text-secondary); padding: 0.2rem 0.6rem; border-radius: var(--radius-sm);
     font-size: 0.72rem; font-family: 'JetBrains Mono', monospace; border: 1px solid var(--border-light);
 }
 
 /* SINGLE PAGE (post/proyecto) */
-.single-page { max-width: 800px; }
+.single-page { max-width: 800px; width: 100%; }
 .single-header { text-align: center; margin-bottom: 2rem; }
 .single-header .date { font-family: 'JetBrains Mono', monospace; color: var(--text-muted); font-size: 0.85rem; }
 .single-header h1 { font-size: 2.2rem; margin: 0.8rem 0; letter-spacing: -0.5px; }
 .single-desc { color: var(--text-secondary); font-size: 1.05rem; }
 .single-image { border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; border: 1px solid var(--border-light); }
 .single-image img { width: 100%; display: block; }
-.single-admin-actions { margin-top: 2.5rem; display: flex; gap: 0.8rem; }
+.single-admin-actions { margin-top: 2.5rem; display: flex; gap: 0.8rem; justify-content: center; }
 
 /* MARKDOWN CONTENT */
 .markdown-body { font-size: 1.02rem; color: var(--text-primary); }
@@ -291,14 +302,16 @@ section { max-width: var(--max-width); margin: 0 auto; padding: 3rem 1.8rem 4rem
 }
 .markdown-body code {
     background: var(--bg-card); border: 1px solid var(--border-light); padding: 0.15rem 0.4rem;
-    border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.88em; color: var(--accent-2);
+    border-radius: var(--radius-sm); font-family: 'JetBrains Mono', monospace; font-size: 0.88em; color: var(--accent-2);
 }
 .markdown-body pre {
     background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm);
     padding: 1.2rem; overflow-x: auto; margin-bottom: 1.2rem;
 }
 .markdown-body pre code { background: none; border: none; padding: 0; color: var(--text-primary); }
-.markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.2rem; }
+
+/* Para móviles: Hacer que las tablas hagan scroll horizontal si son muy anchas */
+.markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.2rem; display: block; overflow-x: auto; white-space: nowrap; }
 .markdown-body th, .markdown-body td { border: 1px solid var(--border-light); padding: 0.5rem 0.8rem; text-align: left; }
 .markdown-body th { background: var(--bg-card); }
 .markdown-body img { max-width: 100%; border-radius: var(--radius-sm); }
@@ -365,14 +378,14 @@ footer { background: var(--bg-secondary); border-top: 1px solid var(--border); p
 .sidebar-field { display: flex; flex-direction: column; gap: 0.5rem; }
 .sidebar-field label { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); }
 .sidebar-field input[type="text"], .sidebar-field textarea, .sidebar-field input[type="file"] {
-    background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: 4px;
+    background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--radius-sm);
     padding: 0.6rem 0.8rem; color: var(--text-primary); font-size: 0.85rem; width: 100%; transition: all var(--transition);
 }
 .sidebar-field textarea { font-family: inherit; resize: vertical; }
 .sidebar-field input:focus, .sidebar-field textarea:focus { outline: none; border-color: var(--accent); }
-.sidebar-thumb-preview { margin-top: 0.4rem; border: 1px solid var(--border-light); border-radius: 4px; overflow: hidden; max-width: 100px; }
+.sidebar-thumb-preview { margin-top: 0.4rem; border: 1px solid var(--border-light); border-radius: var(--radius-sm); overflow: hidden; max-width: 100px; }
 .sidebar-thumb-preview img { width: 100%; display: block; }
-.checkbox-field { flex-direction: row; align-items: center; gap: 0.6rem; background: var(--bg-primary); padding: 0.6rem 0.8rem; border-radius: 4px; border: 1px solid var(--border-light); }
+.checkbox-field { flex-direction: row; align-items: center; gap: 0.6rem; background: var(--bg-primary); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-light); }
 .checkbox-field input { accent-color: var(--accent); cursor: pointer; }
 
 .overleaf-editor-zone { flex: 1; display: flex; flex-direction: column; background: var(--bg-primary); min-width: 0; }
@@ -448,7 +461,7 @@ footer { background: var(--bg-secondary); border-top: 1px solid var(--border); p
 
 .tree-explorer .draft-badge {
   font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 600; color: var(--danger);
-  background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); padding: 0.1rem 0.5rem; border-radius: 50px;
+  background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); padding: 0.1rem 0.5rem; border-radius: var(--radius-sm);
 }
 
 .tree-explorer .tree-post .admin-actions {
@@ -508,45 +521,87 @@ footer { background: var(--bg-secondary); border-top: 1px solid var(--border); p
 
 .media-list-snippet-container { flex-shrink: 0; width: 220px; }
 .media-snippet {
-  background-color: #0d1117; border: 1px solid var(--border-light); padding: 0.5rem 0.8rem; border-radius: 6px;
+  background-color: #0d1117; border: 1px solid var(--border-light); padding: 0.5rem 0.8rem; border-radius: var(--radius-sm);
   font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: border-color 0.2s;
 }
 .media-snippet:hover { border-color: var(--accent); }
 .media-snippet code { color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 10px; }
 
-
 /* ==========================================================================
-   RESPONSIVIDAD
+   RESPONSIVIDAD (MÓVILES Y TABLETS)
    ========================================================================== */
+
+/* Tablets (iPad) */
+@media (max-width: 992px) {
+    .about-home, .about-full .about-home { gap: 2rem; padding: 2rem; }
+}
+
+/* Teléfonos Móviles (Galaxy S20, iPhone, etc) */
 @media (max-width: 768px) {
-    .header-inner { flex-wrap: wrap; gap: 0.8rem; justify-content: center; padding: 0.5rem 1rem; }
+    /* Ajustes generales de la página (El problema de la captura) */
+    section { padding: 1.5rem 1rem 3rem; width: 100%; }
+    .hero { padding: 3rem 1rem 2.5rem; width: 100%; }
+    
+    /* Header & Navbar */
+    .header-inner { flex-direction: column; gap: 1rem; padding: 1rem; }
     header { height: auto; padding: 0.5rem 0; }
-    nav { gap: 1.2rem; flex-wrap: wrap; justify-content: center; }
-    .about-home, .about-full .about-home { grid-template-columns: 1fr; padding: 1.8rem; }
-    .hero { padding: 3rem 1rem 2.5rem; }
-    .hero h1 { font-size: 2rem; }
-    .footer-inner { flex-direction: column; text-align: center; }
+    nav { gap: 1.2rem; flex-wrap: wrap; justify-content: center; width: 100%; }
+
+    /* ¡LA SOLUCIÓN DE LA SECCIÓN ABOUT! */
+    .about-home, .about-full .about-home { 
+        display: flex; /* Quitamos el grid que rompía el ancho */
+        flex-direction: column; /* Apilamos imagen y texto */
+        gap: 1.5rem; 
+        padding: 1.5rem 1rem; /* Reducimos el padding interno para que respire */
+        text-align: center; 
+        width: 100%; 
+    }
+    .about-img-wrapper { 
+        width: 100%;
+        max-width: 320px; /* Evita que tu foto ocupe tooooda la pantalla verticalmente */
+        margin: 0 auto; 
+    }
+    .about-content .role { display: inline-block; } 
+
+    /* Hero & Sections */
+    .hero h1 { font-size: 2.2rem; }
+    .section-header { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+
+    /* Post & Project Headers */
+    .single-header h1 { font-size: 1.8rem; }
+    .single-admin-actions { flex-direction: column; width: 100%; }
+    
+    /* Formularios Admin */
+    .admin-form { padding: 1.5rem 1.2rem; }
+    .form-actions { flex-direction: column; width: 100%; gap: 0.8rem; }
+    .btn-outline { margin-left: 0; }
+    
+    /* Botones amigables para pulgares (Ocupan el ancho de la pantalla) */
+    .btn-primary, .btn-outline, .btn-ide-primary, .btn-ide-secondary, .btn-sm, .btn-tiny, .btn-tiny-danger { 
+        width: 100%; justify-content: center; 
+    }
+    .single-admin-actions .btn-sm, .single-admin-actions .btn-tiny-danger { width: 100%; }
+    .admin-actions { flex-direction: column; width: 100%; align-items: stretch; }
+    
+    /* Footer */
+    .footer-inner { flex-direction: column; text-align: center; gap: 1.2rem; }
     .footer-links { flex-direction: column; gap: 0.8rem; }
-    section { padding: 2rem 1rem 3rem; }
-    .section-header { flex-direction: column; align-items: flex-start; }
     
     /* IDE Mobile */
     .ide-workspace { flex-direction: column; }
     .overleaf-sidebar { width: 100%; height: 250px; border-right: none; border-bottom: 1px solid var(--border); }
     .overleaf-bottom-tray { flex-direction: column; align-items: stretch; }
-    
-    /* Forzar botones a pantalla completa en móvil para fácil toque */
-    .btn-primary, .btn-outline, .btn-ide-primary, .btn-ide-secondary { width: 100%; justify-content: center; }
-    .ide-actions-bar { width: 100%; justify-content: space-between; }
+    .ide-actions-bar { width: 100%; flex-direction: column; gap: 0.8rem; }
     
     /* Mostrar acciones admin de árbol siempre en móvil */
-    .tree-explorer .tree-post .admin-actions { opacity: 1; }
+    .tree-explorer .tree-post .admin-actions { opacity: 1; flex-direction: row; margin-top: 0.5rem; }
+    .tree-explorer .tree-post { flex-wrap: wrap; }
     
     /* Tabla de medios responsiva */
     .media-list-row { flex-direction: column; align-items: flex-start; gap: 1rem; position: relative; }
     .media-list-thumb { width: 100%; height: 160px; }
     .media-list-snippet-container { width: 100%; }
-    .media-list-actions { position: absolute; top: 1rem; right: 1rem; background: var(--bg-card); border-radius: 8px; }
+    .media-list-actions { position: absolute; top: 1rem; right: 1rem; background: var(--bg-card); border-radius: var(--radius-sm); }
 }
 
 @media (max-width: 600px) {
@@ -557,4 +612,5 @@ footer { background: var(--bg-secondary); border-top: 1px solid var(--border); p
 @media (max-width: 480px) {
     .blog-grid, .projects-grid { grid-template-columns: 1fr; }
     .hero-tags span { font-size: 0.75rem; padding: 0.35rem 0.8rem; }
+    .flash { flex-direction: column; text-align: center; }
 }
