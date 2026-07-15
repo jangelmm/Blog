@@ -1,54 +1,85 @@
-<%= form_with model: project, url: (project.new_record? ? projects_path : project_path(project.slug)), local: true, multipart: true, class: "admin-form" do |f| %>
+<%= form_with model: project, url: (project.new_record? ? projects_path : project_path(project.slug)), local: true, multipart: true, class: "overleaf-ide-container" do |f| %>
+  
   <% if project.errors.any? %>
-    <div class="form-errors">
+    <div class="form-errors-banner">
       <p><strong><%= pluralize(project.errors.count, "error") %> impidieron guardar este proyecto:</strong></p>
-      <ul>
-        <% project.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
-      </ul>
+      <ul><% project.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %></ul>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :title, "Título" %>
-    <%= f.text_field :title, required: true %>
+  <div class="ide-workspace">
+    
+    <aside class="overleaf-sidebar">
+      <div class="sidebar-section-title">CONFIGURACIÓN DEL PROYECTO</div>
+      
+      <div class="sidebar-field">
+        <%= f.label :title, "Título" %>
+        <%= f.text_field :title, required: true, placeholder: "Ej. AstroReduce" %>
+      </div>
+
+      <div class="sidebar-field">
+        <%= f.label :description, "Descripción Corta (Tarjeta)" %>
+        <%= f.text_area :description, rows: 3, placeholder: "Extracto para el portafolio..." %>
+      </div>
+
+      <div class="sidebar-field">
+        <%= f.label :tech_stack, "Tecnologías (separadas por coma)" %>
+        <%= f.text_field :tech_stack, placeholder: "Python, C++, CUDA" %>
+      </div>
+
+      <div class="sidebar-field">
+        <%= f.label :icon, "Ícono de respaldo (FontAwesome)" %>
+        <%= f.text_field :icon, placeholder: "fa-solid fa-satellite" %>
+      </div>
+
+      <div class="sidebar-field">
+        <%= f.label :position, "Orden (menor = primero)" %>
+        <%= f.number_field :position, placeholder: "0" %>
+      </div>
+
+      <div class="sidebar-field">
+        <%= f.label :image, "Imagen de Referencia" %>
+        <%= f.file_field :image, accept: "image/*" %>
+        <% if project.image.attached? %>
+          <div class="sidebar-thumb-preview">
+            <%= image_tag project.image %>
+          </div>
+        <% end %>
+      </div>
+    </aside>
+
+    <main class="overleaf-editor-zone">
+      <div class="editor-top-toolbar">
+        <div class="toolbar-left">
+          <span class="file-tab active">readme.md</span>
+        </div>
+        <div class="toolbar-right">
+          <span class="hint-text">Imágenes: ![[img.png]] o ![[/Proyectos/img.png]]</span>
+        </div>
+      </div>
+      
+      <div class="editor-textarea-wrapper">
+        <%= f.text_area :body, placeholder: "## Detalles técnicos\n\nEscribe la documentación de tu proyecto en Markdown aquí...", class: "ide-textarea" %>
+      </div>
+    </main>
   </div>
 
-  <div class="field">
-    <%= f.label :description, "Descripción corta (aparece en la tarjeta)" %>
-    <%= f.text_area :description, rows: 2 %>
-  </div>
+  <footer class="overleaf-bottom-tray">
+    <div class="tray-gallery-section" style="display: flex; flex-direction: column; justify-content: center;">
+      <div class="tray-header" style="margin-bottom: 5px; border-bottom: none; display: flex; align-items: center; gap: 15px;">
+        <span style="font-size: 0.9rem; color: var(--text-muted);">
+          <i class="fa-solid fa-folder-tree"></i> Repositorio de Medios
+        </span>
+        <%= link_to "📂 Abrir Carpeta de Proyectos", media_assets_path(path: "Proyectos"), target: "_blank", class: "btn-ide-secondary", style: "text-decoration: none;" %>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">
+        Sube diagramas en el gestor y usa <code>![[/Proyectos/nombre.png]]</code> en el editor.
+      </p>
+    </div>
 
-  <div class="field">
-    <%= f.label :tech_stack, "Tecnologías (separadas por coma)" %>
-    <%= f.text_field :tech_stack, placeholder: "Python, C++, CUDA" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :icon, "Ícono Font Awesome de respaldo (si no subes imagen)" %>
-    <%= f.text_field :icon, placeholder: "fa-solid fa-satellite" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :image, "Imagen de referencia del proyecto" %>
-    <%= f.file_field :image, accept: "image/*" %>
-    <% if project.image.attached? %>
-      <div class="current-image"><%= image_tag project.image, alt: project.title %></div>
-    <% end %>
-  </div>
-
-  <div class="field">
-    <%= f.label :position, "Orden (menor número = aparece primero)" %>
-    <%= f.number_field :position %>
-  </div>
-
-  <div class="field markdown-editor">
-    <%= f.label :body, "Descripción larga (Markdown, opcional)" %>
-    <p class="hint">Soporta encabezados, negritas, listas, enlaces y bloques de código.</p>
-    <%= f.text_area :body, rows: 14, placeholder: "Detalles técnicos del proyecto en **Markdown**..." %>
-  </div>
-
-  <div class="form-actions">
-    <%= f.submit (project.new_record? ? "Crear proyecto" : "Guardar cambios"), class: "btn-primary" %>
-    <%= link_to "Cancelar", projects_path, class: "btn-outline" %>
-  </div>
+    <div class="ide-actions-bar">
+      <%= link_to "Cancelar", projects_path, class: "btn-ide-secondary" %>
+      <%= f.submit (project.new_record? ? "Crear Proyecto" : "Guardar Cambios"), class: "btn-ide-primary" %>
+    </div>
+  </footer>
 <% end %>

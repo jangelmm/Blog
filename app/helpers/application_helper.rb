@@ -2,13 +2,26 @@ module ApplicationHelper
   def markdown(text, post = nil)
     return "".html_safe if text.blank?
 
-    if post.present? && post.body_images.attached?
+    if text.include?("![[")
       text = text.gsub(/!\[\[(.*?)\]\]/) do |match|
-        filename = $1
-        attached_image = post.body_images.find { |img| img.filename.to_s == filename }
+        image_identifier = $1
+        asset = nil
 
-        if attached_image
-          "![#{filename}](#{url_for(attached_image)})"
+        if image_identifier.start_with?("/")
+          parts = image_identifier.split("/")
+          filename = parts.pop
+          folder_path = parts.reject(&:blank?).join("/")
+
+          asset = MediaAsset.joins(file_attachment: :blob)
+                            .find_by(path: folder_path, active_storage_blobs: { filename: filename })
+
+        elsif post.present?
+          asset = MediaAsset.joins(file_attachment: :blob)
+                            .find_by(path: post.path, active_storage_blobs: { filename: image_identifier })
+        end
+
+        if asset&.file&.attached?
+          "![#{filename || image_identifier}](#{url_for(asset.file)})"
         else
           match
         end

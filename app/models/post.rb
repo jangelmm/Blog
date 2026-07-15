@@ -2,7 +2,6 @@
 class Post < ApplicationRecord
   include Sluggable
   has_one_attached :image
-  has_many_attached :body_images
 
   validates :path, presence: true
   validate :path_format_valido

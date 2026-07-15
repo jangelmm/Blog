@@ -5,6 +5,9 @@
       <%= link_to new_post_path, class: "link-more" do %>
         <i class="fa-solid fa-plus"></i> Nueva entrada
       <% end %>
+      <%= link_to media_assets_path(path: "General"), target: "_blank", class: "btn-ide-secondary", style: "text-decoration: none;" do %>
+        <i class="fa-solid fa-folder-open" style="color: #dcb67a;"></i> Archivos Raíz
+      <% end %>
     <% end %>
   </div>
 

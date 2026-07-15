@@ -4,6 +4,13 @@
       <i class="fa-solid fa-folder-open" style="color: var(--accent); margin-right: 0.5rem;"></i>
       Índice de: <span style="font-family: 'JetBrains Mono', monospace; color: var(--text-secondary);"><%= params[:path] %>/</span>
     </h2>
+
+    <% if logged_in? %>
+    <%= link_to media_assets_path(path: params[:path]), target: "_blank", class: "btn-ide-secondary", style: "text-decoration: none;" do %>
+      <i class="fa-solid fa-folder-open" style="color: #dcb67a;"></i> Archivos de esta Ruta
+    <% end %>
+  <% end %>
+  
     <%= link_to "Volver al blog", posts_path, class: "link-more" %>
   </div>
 

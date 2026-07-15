@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   get    "control-panel-x7q9/login",  to: "sessions#new",     as: :login
   post   "control-panel-x7q9/login",  to: "sessions#create"
   delete "logout",                    to: "sessions#destroy", as: :logout
+  resources :media_assets, only: [ :index, :create, :destroy ]
 
   # ── Rutas jerárquicas públicas del blog (van al final) ──
   # /blog/Programacion/Ruby/Rails/PrimerPrograma -> post individual

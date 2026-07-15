@@ -1,0 +1,103 @@
+<div class="media-manager-container" style="max-width: 1200px; margin: 0 auto; padding: 2rem; color: #c9d1d9;">
+  
+  <header class="media-header" style="margin-bottom: 2rem; border-bottom: 1px solid #30363d; padding-bottom: 1rem;">
+    <h2 style="font-size: 1.5rem; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.75rem;">
+      <i class="fa-solid fa-folder-open" style="color: #dcb67a;"></i> 
+      <code>/<%= @current_path %></code>
+    </h2>
+   
+  </header>
+  
+  <div class="media-upload-zone" style="background-color: #161b22; border: 1px dashed #30363d; border-radius: 8px; padding: 1.5rem; margin-bottom: 2.5rem;">
+    <%= form_with url: media_assets_path, local: true, multipart: true, style: "display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;" do |form| %>
+      <%= form.hidden_field :path, value: @current_path %>
+      
+      <div class="file-input-wrapper" style="flex-grow: 1; display: flex; align-items: center; gap: 10px; background-color: #010409; border: 1px solid #30363d; padding: 0.6rem 1rem; border-radius: 6px;">
+        <i class="fa-solid fa-cloud-arrow-up" style="color: #8b949e;"></i>
+        <%= form.file_field :files, multiple: true, name: "files[]", required: true, class: "custom-file-input", style: "color: #c9d1d9; width: 100%; font-family: monospace; cursor: pointer; outline: none;", accept: "image/*" %>%>
+      </div>
+      
+      <%= form.submit "Subir Archivo", class: "btn-ide-primary", style: "padding: 0.6rem 1.5rem; white-space: nowrap;" %>
+    <% end %>
+  </div>
+
+  <div class="media-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+    <% @assets.each do |asset| %>
+      <% if asset.file.attached? %>
+        <div class="media-list-row" style="display: flex; align-items: center; background-color: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 0.75rem 1rem; gap: 1.5rem; transition: 0.2s;">
+          
+          <div class="media-list-thumb" style="width: 140px; height: 90px; background-color: #010409; border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #30363d;">
+            <%= image_tag asset.file, style: "max-width: 100%; max-height: 100%; object-fit: contain;" %>
+          </div>
+          
+          <div class="media-list-info" style="flex-grow: 1; display: flex; flex-direction: column; gap: 0.4rem; min-width: 0;">
+            <span class="media-filename" title="<%= asset.file.filename %>" style="font-size: 0.95rem; font-weight: 600; color: #e6edf3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              <i class="fa-regular fa-file-image" style="color: #8b949e;"></i> <%= asset.file.filename %>
+            </span>
+            <span class="media-meta" style="font-size: 0.8rem; color: #8b949e;">
+              <%= number_to_human_size(asset.file.byte_size) %> • Subido el <%= asset.created_at.strftime("%d %b %Y") %>
+            </span>
+          </div>
+          
+          <div class="media-list-snippet-container" style="flex-shrink: 0; width: 220px;">
+            <div class="media-snippet" onclick="copyToClipboard('![[<%= asset.file.filename %>]]', this)" style="background-color: #0d1117; border: 1px solid #30363d; padding: 0.5rem 0.8rem; border-radius: 6px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+              <code style="color: #58a6ff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 10px;">![[<%= truncate(asset.file.filename.to_s, length: 20) %>]]</code>
+              <i class="fa-regular fa-copy copy-icon" style="color: #8b949e;"></i>
+            </div>
+          </div>
+          
+          <div class="media-list-actions" style="flex-shrink: 0;">
+            <%= button_to media_asset_path(asset), method: :delete, form: { data: { turbo_confirm: "¿Eliminar este archivo permanentemente?" } }, title: "Eliminar archivo", style: "background: transparent; color: #8b949e; border: 1px solid transparent; padding: 0.6rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;" do %>
+              <i class="fa-solid fa-trash-can" onmouseover="this.style.color='#f85149'" onmouseout="this.style.color='#8b949e'" style="transition: 0.2s;"></i>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if @assets.empty? %>
+    <div class="empty-state" style="text-align: center; padding: 4rem 2rem; color: #8b949e;">
+      <i class="fa-solid fa-box-open empty-icon" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+      <p>No hay imágenes vinculadas a esta ruta.</p>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  function copyToClipboard(text, element) {
+    navigator.clipboard.writeText(text).then(() => {
+      const icon = element.querySelector('.copy-icon');
+      icon.classList.remove('fa-copy', 'fa-regular');
+      icon.classList.add('fa-check', 'fa-solid');
+      icon.style.color = '#2ea043';
+      
+      setTimeout(() => {
+        icon.classList.remove('fa-check', 'fa-solid');
+        icon.classList.add('fa-copy', 'fa-regular');
+        icon.style.color = '#8b949e';
+      }, 2000);
+    });
+  }
+</script>
+
+<style>
+  /* Magia para estilizar el botón nativo de "Browse..." */
+  .custom-file-input::file-selector-button {
+    background-color: #21262d; /* Fondo gris oscuro */
+    color: #c9d1d9;            /* Texto claro */
+    border: 1px solid #30363d; /* Borde sutil */
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+  }
+
+  /* Efecto Hover para cuando pasas el ratón */
+  .custom-file-input::file-selector-button:hover {
+    background-color: #30363d;
+    border-color: #8b949e;
+  }
+</style>

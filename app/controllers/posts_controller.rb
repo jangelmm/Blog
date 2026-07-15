@@ -48,12 +48,6 @@ class PostsController < ApplicationController
   end
 
   def update
-    if params[:purge_images].present?
-      params[:purge_images].each do |image_id|
-        image = @post.body_images.find_by(id: image_id)
-        image.purge if image
-      end
-    end
     if @post.update(post_params)
       redirect_to post_show_path(path: @post.path, slug: @post.slug), notice: "Entrada actualizada."
     else
@@ -77,6 +71,6 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :description, :body, :path, :published, :image, body_images: [])
+    params.require(:post).permit(:title, :description, :body, :path, :published, :image)
   end
 end
