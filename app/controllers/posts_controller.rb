@@ -4,7 +4,7 @@ class PostsController < ApplicationController
   before_action :set_post, only: [ :edit, :update, :destroy ]
 
   def index
-    @posts = logged_in? ? Post.recent : Post.published.recent
+    @posts = logged_in? ? Post.order(path: :asc, title: :asc) : Post.published.order(path: :asc, title: :asc)
   end
 
   def show
@@ -26,7 +26,7 @@ class PostsController < ApplicationController
 
   def tree
     prefix = params[:path].to_s.chomp("/")
-    @posts = Post.where("path = ? OR path LIKE ?", prefix, "#{prefix}/%")
+    @posts = Post.where("path = ? OR path LIKE ?", prefix, "#{prefix}/%").order(:path, :title)
     @tree = build_tree(@posts, prefix)
   end
 
