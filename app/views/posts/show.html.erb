@@ -20,63 +20,68 @@
   </div>
 
   <div class="post-citation-card" id="citation-block">
-  <div class="citation-content">
-    <div class="citation-header">
-      <h3 class="citation-title"><%= @post.title %></h3>
-      <button class="btn-copy-citation" id="copyCitationBtn" title="Copiar cita en formato APA">
-        <i class="fa-regular fa-copy"></i> Copiar
-      </button>
-    </div>
-    
-    <div class="citation-url">
-      <%= link_to request.original_url, request.original_url, class: "url-link" %>
-    </div>
-    
-    <div class="citation-metadata">
-      <div class="meta-group">
-        <span class="meta-label">Autor</span>
-        <span class="meta-value"><%= Profile.first&.name || "Jesús Ángel Martínez Mendoza" %></span>
+    <div class="citation-content">
+      <div class="citation-header">
+        <h3 class="citation-title"><%= @post.title %></h3>
+        <button class="btn-copy-citation" id="copyCitationBtn" title="Copiar cita en formato APA">
+          <i class="fa-regular fa-copy"></i> Copiar
+        </button>
       </div>
-      <div class="meta-group">
-        <span class="meta-label">Publicado</span>
-        <span class="meta-value"><%= (@post.published_at || @post.created_at).strftime("%Y-%m-%d") %></span>
-      </div>
-      <div class="meta-group">
-        <span class="meta-label">Licencia</span>
-        <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer" class="meta-value license-link">
-          CC BY-NC-SA 4.0
-        </a>
-      </div>
-    </div>
-  </div>
-  
-  <i class="fa-brands fa-creative-commons bg-cc-icon"></i>
-</div>
-
-<script>
-  document.getElementById('copyCitationBtn').addEventListener('click', function() {
-    const author = "<%= Profile.first&.name || 'Martínez Mendoza, J. Á.' %>";
-    const date = "<%= (@post.published_at || @post.created_at).strftime('%Y, %d de %B') %>";
-    const title = "<%= @post.title %>";
-    const url = "<%= request.original_url %>";
-    
-    const citationText = `${author}. (${date}). ${title}. Recuperado de ${url}`;
-    
-    navigator.clipboard.writeText(citationText).then(() => {
-      const btn = this;
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
-      btn.style.color = "var(--accent-2)"; 
-      btn.style.borderColor = "var(--accent-2)";
       
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.style.color = "";
-        btn.style.borderColor = "";
-      }, 2000);
+      <div class="citation-url">
+        <%= link_to request.original_url, request.original_url, class: "url-link" %>
+      </div>
+      
+      <div class="citation-metadata">
+        <div class="meta-group">
+          <span class="meta-label">Autor</span>
+          <span class="meta-value"><%= Profile.first&.name || "Jesús Ángel Martínez Mendoza" %></span>
+        </div>
+        <div class="meta-group">
+          <span class="meta-label">Publicado</span>
+          <span class="meta-value"><%= (@post.published_at || @post.created_at).strftime("%Y-%m-%d") %></span>
+        </div>
+        <div class="meta-group">
+          <span class="meta-label">Licencia</span>
+          <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer" class="meta-value license-link">
+            CC BY-NC-SA 4.0
+          </a>
+        </div>
+      </div>
+
+      <div class="citation-notes" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
+        <strong>Nota sobre el código:</strong> El contenido escrito y multimedia de este artículo está sujeto a la licencia CC BY-NC-SA 4.0. Sin embargo, todos los fragmentos de código fuente provistos aquí se liberan bajo la <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none;">Licencia MIT</a>, por lo que eres libre de copiarlos, modificarlos y usarlos en tus propios proyectos sin restricciones.
+      </div>
+
+    </div>
+    
+    <i class="fa-brands fa-creative-commons bg-cc-icon"></i>
+  </div>
+
+  <script>
+    document.getElementById('copyCitationBtn').addEventListener('click', function() {
+      const author = "<%= Profile.first&.name || 'Martínez Mendoza, J. Á.' %>";
+      const date = "<%= (@post.published_at || @post.created_at).strftime('%Y, %d de %B') %>";
+      const title = "<%= @post.title %>";
+      const url = "<%= request.original_url %>";
+      
+      const citationText = `${author}. (${date}). ${title}. Recuperado de ${url}`;
+      
+      navigator.clipboard.writeText(citationText).then(() => {
+        const btn = this;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
+        btn.style.color = "var(--accent-2)"; 
+        btn.style.borderColor = "var(--accent-2)";
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.style.color = "";
+          btn.style.borderColor = "";
+        }, 2000);
+      });
     });
-  });
-</script>
+  </script>
 
   <% if logged_in? %>
     <div class="admin-actions single-admin-actions">

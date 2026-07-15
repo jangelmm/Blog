@@ -54,6 +54,11 @@
           </a>
         </div>
       </div>
+
+      <div class="citation-notes" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
+        <strong>Nota sobre el código:</strong> La documentación escrita y multimedia de este proyecto está sujeta a la licencia CC BY-NC-SA 4.0. Sin embargo, todos los fragmentos de código fuente provistos aquí se liberan bajo la <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none;">Licencia MIT</a>, por lo que eres libre de copiarlos, modificarlos y usarlos en tus propios proyectos sin restricciones.
+      </div>
+
     </div>
     
     <i class="fa-brands fa-creative-commons bg-cc-icon"></i>
@@ -83,6 +88,7 @@
       });
     });
   </script>
+  
   <% if logged_in? %>
     <div class="admin-actions single-admin-actions">
       <%= link_to "Editar proyecto", edit_project_path(@project.slug), class: "btn-sm" %>
