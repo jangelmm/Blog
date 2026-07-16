@@ -61,3 +61,6 @@ end
 
 gem "bcrypt", "~> 3.1.7"   # para has_secure_password (login)
 gem "redcarpet"             # para renderizar Markdown -> HTML
+
+# Indexacion para Google
+gem "sitemap_generator"
