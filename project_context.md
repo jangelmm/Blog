@@ -14,6 +14,7 @@ mi_blog
 │   │   ├── application_controller.rb
 │   │   ├── errors_controller.rb
 │   │   ├── home_controller.rb
+│   │   ├── media_assets_controller.rb
 │   │   ├── posts_controller.rb
 │   │   ├── projects_controller.rb
 │   │   └── sessions_controller.rb
@@ -36,6 +37,7 @@ mi_blog
 │   │   ├── concerns
 │   │   │   └── sluggable.rb
 │   │   ├── application_record.rb
+│   │   ├── media_asset.rb
 │   │   ├── post.rb
 │   │   ├── profile.rb
 │   │   ├── project.rb
@@ -52,6 +54,8 @@ mi_blog
 │       │   ├── application.html.erb
 │       │   ├── mailer.html.erb
 │       │   └── mailer.text.erb
+│       ├── media_assets
+│       │   └── index.html.erb
 │       ├── posts
 │       │   ├── _form.html.erb
 │       │   ├── _tree_node.html.erb
@@ -107,7 +111,8 @@ mi_blog
 │   │   ├── 20260101000003_create_posts.rb
 │   │   ├── 20260101000004_create_projects.rb
 │   │   ├── 20260101000005_rename_tag_to_path_on_posts.rb
-│   │   └── 20260713014736_create_active_storage_tables.active_storage.rb
+│   │   ├── 20260713014736_create_active_storage_tables.active_storage.rb
+│   │   └── 20260715165701_create_media_assets.rb
 │   ├── cable_schema.rb
 │   ├── cache_schema.rb
 │   ├── queue_schema.rb
@@ -887,6 +892,40 @@ end
 
 ```
 
+## `app/controllers/media_assets_controller.rb`
+
+```ruby
+class MediaAssetsController < ApplicationController
+  before_action :require_login
+
+  def index
+    @current_path = params[:path] || "General"
+    @assets = MediaAsset.where(path: @current_path).order(created_at: :desc)
+  end
+
+  def create
+    if params[:files].present?
+      params[:files].each do |file|
+        asset = MediaAsset.new(path: params[:path])
+        asset.file.attach(file)
+        asset.save
+      end
+      redirect_to media_assets_path(path: params[:path]), notice: "Archivos subidos correctamente."
+    else
+      redirect_to media_assets_path(path: params[:path]), alert: "No se seleccionó ningún archivo."
+    end
+  end
+
+  def destroy
+    @asset = MediaAsset.find(params[:id])
+    path = @asset.path
+    @asset.destroy
+    redirect_to media_assets_path(path: path), notice: "Archivo eliminado."
+  end
+end
+
+```
+
 ## `app/controllers/posts_controller.rb`
 
 ```ruby
@@ -896,7 +935,7 @@ class PostsController < ApplicationController
   before_action :set_post, only: [ :edit, :update, :destroy ]
 
   def index
-    @posts = logged_in? ? Post.recent : Post.published.recent
+    @posts = logged_in? ? Post.order(path: :asc, title: :asc) : Post.published.order(path: :asc, title: :asc)
   end
 
   def show
@@ -918,7 +957,7 @@ class PostsController < ApplicationController
 
   def tree
     prefix = params[:path].to_s.chomp("/")
-    @posts = Post.where("path = ? OR path LIKE ?", prefix, "#{prefix}/%")
+    @posts = Post.where("path = ? OR path LIKE ?", prefix, "#{prefix}/%").order(:path, :title)
     @tree = build_tree(@posts, prefix)
   end
 
@@ -940,12 +979,6 @@ class PostsController < ApplicationController
   end
 
   def update
-    if params[:purge_images].present?
-      params[:purge_images].each do |image_id|
-        image = @post.body_images.find_by(id: image_id)
-        image.purge if image
-      end
-    end
     if @post.update(post_params)
       redirect_to post_show_path(path: @post.path, slug: @post.slug), notice: "Entrada actualizada."
     else
@@ -969,7 +1002,7 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :description, :body, :path, :published, :image, body_images: [])
+    params.require(:post).permit(:title, :description, :body, :path, :published, :image)
   end
 end
 
@@ -1067,13 +1100,26 @@ module ApplicationHelper
   def markdown(text, post = nil)
     return "".html_safe if text.blank?
 
-    if post.present? && post.body_images.attached?
+    if text.include?("![[")
       text = text.gsub(/!\[\[(.*?)\]\]/) do |match|
-        filename = $1
-        attached_image = post.body_images.find { |img| img.filename.to_s == filename }
+        image_identifier = $1
+        asset = nil
 
-        if attached_image
-          "![#{filename}](#{url_for(attached_image)})"
+        if image_identifier.start_with?("/")
+          parts = image_identifier.split("/")
+          filename = parts.pop
+          folder_path = parts.reject(&:blank?).join("/")
+
+          asset = MediaAsset.joins(file_attachment: :blob)
+                            .find_by(path: folder_path, active_storage_blobs: { filename: filename })
+
+        elsif post.present?
+          asset = MediaAsset.joins(file_attachment: :blob)
+                            .find_by(path: post.path, active_storage_blobs: { filename: image_identifier })
+        end
+
+        if asset&.file&.attached?
+          "![#{filename || image_identifier}](#{url_for(asset.file)})"
         else
           match
         end
@@ -1164,6 +1210,17 @@ end
 
 ```
 
+## `app/models/media_asset.rb`
+
+```ruby
+class MediaAsset < ApplicationRecord
+  has_one_attached :file
+
+  validates :path, presence: true
+end
+
+```
+
 ## `app/models/post.rb`
 
 ```ruby
@@ -1171,7 +1228,6 @@ end
 class Post < ApplicationRecord
   include Sluggable
   has_one_attached :image
-  has_many_attached :body_images
 
   validates :path, presence: true
   validate :path_format_valido
@@ -1458,6 +1514,7 @@ Rails.application.routes.draw do
   get    "control-panel-x7q9/login",  to: "sessions#new",     as: :login
   post   "control-panel-x7q9/login",  to: "sessions#create"
   delete "logout",                    to: "sessions#destroy", as: :logout
+  resources :media_assets, only: [ :index, :create, :destroy ]
 
   # ── Rutas jerárquicas públicas del blog (van al final) ──
   # /blog/Programacion/Ruby/Rails/PrimerPrograma -> post individual
@@ -1981,7 +2038,7 @@ end
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_13_014736) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_15_165701) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -2008,6 +2065,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_13_014736) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "media_assets", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "path"
+    t.datetime "updated_at", null: false
   end
 
   create_table "posts", force: :cascade do |t|
@@ -2269,6 +2332,21 @@ class CreateActiveStorageTables < ActiveRecord::Migration[7.0]
       foreign_key_type = setting || :bigint
       [ primary_key_type, foreign_key_type ]
     end
+end
+
+```
+
+## `db/migrate/20260715165701_create_media_assets.rb`
+
+```ruby
+class CreateMediaAssets < ActiveRecord::Migration[8.1]
+  def change
+    create_table :media_assets do |t|
+      t.string :path
+
+      t.timestamps
+    end
+  end
 end
 
 ```
