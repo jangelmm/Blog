@@ -1,27 +1,33 @@
 :root {
-    --bg-primary: #0a0c10;
-    --bg-secondary: #13161d;
-    --bg-card: #181c25;
-    --bg-card-hover: #1e2330;
-    --text-primary: #e8edf5;
-    --text-secondary: #a1aab8;
-    --text-muted: #6b7280;
-    --accent: #4da8da;
-    --accent-glow: rgba(77, 168, 218, 0.25);
-    --accent-2: #34d399;
-    --danger: #f87171;
-    --border: #252a35;
-    --border-light: #2e3540;
-    --radius-sm: 4px;  /* Reducido para un look más "IDE" */
-    --radius: 8px;     /* Reducido de 12px a 8px */
-    --radius-lg: 12px; /* Reducido de 18px a 12px */
-    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
-    --shadow-glow: 0 0 40px rgba(77, 168, 218, 0.15);
+    --bg-primary: #242933;
+    --bg-secondary: #2e3440;
+    --bg-card: #242933;
+    --bg-card-hover: #2e3440;
+    
+    --text-primary: #d8dee9;
+    --text-secondary: #97a0b5;
+    --text-muted: #4c566a;
+    
+    /* Azul hielo apagado */
+    --accent: #88c0d0;
+    --accent-glow: transparent;
+    --accent-2: #8fbcbb;
+    --danger: #bf616a;
+    
+    --border: #3b4252;
+    --border-light: #2e3440;
+    
+    --radius-sm: 4px;
+    --radius: 6px;
+    --radius-lg: 8px;
+    
+    --shadow-card: none;
+    --shadow-glow: none;
+    
     --transition: 0.25s ease;
-    --max-width: 1200px;
+    --max-width: 1000px;
     --header-height: 70px;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
