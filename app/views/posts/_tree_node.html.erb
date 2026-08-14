@@ -9,8 +9,10 @@
       <% base_path = local_assigns[:current_path] || params[:path].to_s %>
       <% folder_full_path = base_path.present? ? "#{base_path}/#{key}" : key %>
 
-      <%# La carpeta NACE con 'is-collapsed' %>
-      <li class="node-folder is-collapsed">
+      <%# LA MAGIA DE RUBY: Solo agregamos 'is-collapsed' si la carpeta tiene archivos adentro %>
+      <% has_files_inside = value[:_posts].present? %>
+
+      <li class="node-folder <%= 'is-collapsed' if has_files_inside %>">
         <strong>
           <%= key %>
         </strong>
