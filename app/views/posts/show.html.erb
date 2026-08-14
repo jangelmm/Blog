@@ -9,7 +9,7 @@
 
   <% if @post.image.attached? %>
     <div class="single-image">
-      <%= image_tag @post.image, alt: @post.title %>
+      <%= image_tag @post.optimized_image, alt: @post.title %>
     </div>
   <% end %>
 

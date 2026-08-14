@@ -90,7 +90,7 @@
       <div class="project-card">
         <div class="project-img">
           <% if project.image.attached? %>
-            <%= image_tag project.image, alt: project.title %>
+            <%= image_tag project.optimized_image, alt: project.title %>
           <% else %>
             <i class="<%= project.icon.presence || 'fa-solid fa-cube' %>" style="font-size:2.8rem; color:var(--accent);"></i>
           <% end %>

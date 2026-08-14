@@ -38,7 +38,9 @@
       <%= f.label :photo, "Foto (se puede subir desde tu computadora)" %>
       <%= f.file_field :photo, accept: "image/*" %>
       <% if @profile.photo.attached? %>
-        <div class="current-image"><%= image_tag @profile.photo, alt: @profile.name %></div>
+        <div class="current-image">
+          <%= image_tag @profile.optimized_photo, alt: @profile.name %>
+        </div>
       <% end %>
     </div>
 

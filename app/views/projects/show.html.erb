@@ -11,7 +11,7 @@
 
   <div class="single-image">
     <% if @project.image.attached? %>
-      <%= image_tag @project.image, alt: @project.title %>
+      <%= image_tag @project.optimized_image, alt: @project.title %>
     <% else %>
       <div class="project-img" style="aspect-ratio:16/9; border-radius: var(--radius);">
         <i class="<%= @project.icon.presence || 'fa-solid fa-cube' %>" style="font-size:4rem; color:var(--accent);"></i>

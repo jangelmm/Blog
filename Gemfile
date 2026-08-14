@@ -64,3 +64,5 @@ gem "redcarpet"             # para renderizar Markdown -> HTML
 
 # Indexacion para Google
 gem "sitemap_generator"
+
+gem "active_storage_validations"
