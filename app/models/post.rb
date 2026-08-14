@@ -17,8 +17,8 @@ class Post < ApplicationRecord
   # Variante para la portada del post y las tarjetas
   def optimized_image
     image.variant(
-      resize_to_limit: [1200, 800], 
-      format: :webp, 
+      resize_to_limit: [ 1200, 800 ],
+      format: :webp,
       saver: { quality: 80 }
     ).processed
   end
@@ -29,5 +29,15 @@ class Post < ApplicationRecord
 
   private
 
-  # ... (resto de tus métodos privados intactos)
+  def normalizar_path
+    return if path.blank?
+    self.path = path.strip.split("/").reject(&:blank?).join("/")
+  end
+
+  def path_format_valido
+    return if path.blank?
+    unless path.match?(%r{\A[\w\sÁÉÍÓÚÑáéíóúñ\-]+(/[\w\sÁÉÍÓÚÑáéíóúñ\-]+)*\z})
+      errors.add(:path, "solo puede contener letras, números, espacios, guiones y '/'")
+    end
+  end
 end
