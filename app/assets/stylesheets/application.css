@@ -828,12 +828,8 @@ footer {
 .tree-explorer > .tree-list { padding-left: 0; border-left: none; }
 .tree-explorer .tree-list li { position: relative; margin: 0.15rem 0; padding: 0.1rem 0; }
 
-/* REGLA MAGISTRAL: Las listas de subcarpetas SIEMPRE se muestran, ignorando is-collapsed */
-.tree-explorer .node-folder > .tree-list {
-    display: block !important;
-}
-
-/* REGLA MAGISTRAL 2: Los archivos SÍ se ocultan si la carpeta está colapsada */
+/* REGLA CORREGIDA: Si la carpeta está colapsada, se oculta TODO su contenido interno (subcarpetas y archivos) */
+.tree-explorer .node-folder.is-collapsed > .tree-list,
 .tree-explorer .node-folder.is-collapsed > .node-files {
     display: none;
 }
