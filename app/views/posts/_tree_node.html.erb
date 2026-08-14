@@ -1,37 +1,52 @@
-<ul class="tree-list">
-  <% node.each do |key, value| %>
-    <% next if key == :_posts %>
-    
-    <% base_path = local_assigns[:current_path] || params[:path].to_s %>
-    <% folder_full_path = base_path.present? ? "#{base_path}/#{key}" : key %>
+<%# 1. Renderizamos la estructura de subcarpetas %>
+<% has_folders = node.keys.reject { |k| k == :_posts }.any? %>
 
-    <li>
-      <strong>
-        <i class="fa-solid fa-folder" style="color: var(--text-muted, #8b949e);"></i> <%= key %>
-      </strong>
+<% if has_folders %>
+  <ul class="tree-list">
+    <% node.each do |key, value| %>
+      <% next if key == :_posts %>
       
-      <% if logged_in? %>
-        <%= link_to media_assets_path(path: folder_full_path), target: "_blank", title: "Abrir Gestor de Archivos de #{key}", style: "margin-left: 8px; opacity: 0.7; transition: 0.2s;" do %>
-          <i class="fa-solid fa-folder-open" style="color: #dcb67a;"></i>
+      <% base_path = local_assigns[:current_path] || params[:path].to_s %>
+      <% folder_full_path = base_path.present? ? "#{base_path}/#{key}" : key %>
+
+      <%# La carpeta NACE con 'is-collapsed' %>
+      <li class="node-folder is-collapsed">
+        <strong>
+          <%= key %>
+        </strong>
+        
+        <% if logged_in? %>
+          <%= link_to media_assets_path(path: folder_full_path), target: "_blank", class: "folder-admin-link", title: "Abrir directorio" do %>
+            <i class="fa-solid fa-folder-open"></i>
+          <% end %>
         <% end %>
-      <% end %>
-      
-      <%= render partial: "tree_node", locals: { node: value, current_path: folder_full_path } %>
-    </li>
-  <% end %>
-</ul>
+        
+        <%# Llamada recursiva para el contenido de esta carpeta %>
+        <%= render partial: "tree_node", locals: { node: value, current_path: folder_full_path } %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
 
-<% (node[:_posts] || []).each do |post| %>
-  <div class="tree-post">
-  — <%= link_to post.title, post_show_path(path: post.path, slug: post.slug) %>
-  <% unless post.published? %><em class="draft-badge">borrador</em><% end %>
-  
-  <% if logged_in? %>
-    <span class="admin-actions">
-      <%= link_to "Editar", edit_post_path(post.slug), class: "btn-tiny" %>
-      <%= button_to "Eliminar", post_path(post.slug), method: :delete, class: "btn-tiny btn-tiny-danger",
-                    form: { data: { turbo_confirm: "¿Eliminar esta entrada?" } } %>
-    </span>
-  <% end %>
-</div>
+<%# 2. Renderizamos los ARCHIVOS (posts) de este nivel %>
+<% if node[:_posts].present? %>
+  <div class="node-files">
+    <% node[:_posts].each do |post| %>
+      <div class="tree-post">
+        <%= link_to post_show_path(path: post.path, slug: post.slug) do %>
+          <i class="fa-brands fa-markdown file-icon"></i> <%= post.title %>
+        <% end %>
+        
+        <% unless post.published? %>
+          <em class="draft-badge">borrador</em>
+        <% end %>
+        
+        <% if logged_in? %>
+          <span class="admin-actions">
+            <%= link_to "Editar", edit_post_path(post.slug), class: "btn-tiny" %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 <% end %>

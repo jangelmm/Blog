@@ -1,22 +1,26 @@
 <section id="blog" class="blog-tree-page" data-controller="tree">
   <div class="section-header">
-    <h2><i class="fa-solid fa-pen-nib"></i> Blog</h2>
+    <h2><i class="fa-solid fa-folder-tree" style="color: var(--accent);"></i> Índice de Contenidos</h2>
     <% if logged_in? %>
-      <%= link_to new_post_path, class: "link-more" do %>
-        <i class="fa-solid fa-plus"></i> Nueva entrada
-      <% end %>
-      <%= link_to media_assets_path(path: "General"), target: "_blank", class: "btn-ide-secondary", style: "text-decoration: none;" do %>
-        <i class="fa-solid fa-folder-open" style="color: #dcb67a;"></i> Archivos Raíz
-      <% end %>
+      <div class="admin-menu">
+        <%= link_to new_post_path, class: "btn-sm" do %>
+          <i class="fa-solid fa-plus"></i> Nueva entrada
+        <% end %>
+        <%= link_to media_assets_path(path: "General"), target: "_blank", class: "btn-ide-secondary", style: "text-decoration: none;" do %>
+          <i class="fa-solid fa-folder-open" style="color: #dcb67a;"></i> Archivos Raíz
+        <% end %>
+      </div>
     <% end %>
   </div>
 
   <div class="tree-search-wrapper">
     <i class="fa-solid fa-magnifying-glass tree-search-icon"></i>
-    <input type="text" id="post-search" placeholder="Buscar entrada o ruta..." class="tree-search-input" data-action="input->tree#search">
+    <input type="text" id="post-search" placeholder="Buscar entrada, categoría o ruta..." class="tree-search-input" data-action="input->tree#search">
   </div>
 
-  <div class="tree-explorer" data-tree-target="explorer">
-    <%= render partial: "tree_node", locals: { node: build_tree(@posts, "") } %>
+  <div class="tree-explorer-container">
+    <div class="tree-explorer" data-tree-target="explorer">
+      <%= render partial: "tree_node", locals: { node: build_tree(@posts, ""), root: true } %>
+    </div>
   </div>
 </section>

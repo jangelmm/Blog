@@ -445,15 +445,37 @@ footer { background: var(--bg-secondary); border-top: 1px solid var(--border); p
 }
 .tree-explorer .tree-list > li > strong:hover { background: var(--bg-card-hover); }
 .tree-explorer .tree-list > li > strong::before {
-  content: "\f07c"; font-family: "Font Awesome 6 Free"; font-weight: 900; color: var(--accent); font-size: 0.85rem; flex-shrink: 0; transition: transform var(--transition);
+    content: "\f07c"; /* fa-folder-open */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    color: var(--accent);
+    font-size: 0.9rem;
+    flex-shrink: 0;
 }
 .tree-explorer .tree-list > li > strong::after {
-  content: "\f078"; font-family: "Font Awesome 6 Free"; font-weight: 900; font-size: 0.65rem; color: var(--text-muted); margin-left: 0.15rem; transition: transform var(--transition);
+    content: "\f078"; /* fa-chevron-down */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-left: 0.2rem;
+    transition: transform 0.2s ease;
+    transform: rotate(0deg); /* Apunta hacia abajo indicando que está abierto */
 }
-.tree-explorer .tree-list > li.is-collapsed > strong::before { content: "\f07b"; }
-.tree-explorer .tree-list > li.is-collapsed > strong::after { transform: rotate(-90deg); }
-.tree-explorer .tree-list > li.is-collapsed > .tree-list, .tree-explorer .tree-list > li.is-collapsed > .tree-post { display: none; }
+/* 2. Cuando SÍ tiene la clase .is-collapsed, cerramos la carpeta visualmente */
+.tree-explorer .tree-list > li.is-collapsed > strong::before {
+    content: "\f07b"; /* fa-folder (cerrada) */
+}
 
+.tree-explorer .tree-list > li.is-collapsed > strong::after {
+    transform: rotate(-90deg); /* Apunta hacia la derecha */
+}
+
+/* 3. LA REGLA CLAVE: Si la carpeta está colapsada, ocultamos sus posts y subcarpetas */
+.tree-explorer .tree-list > li.is-collapsed > .tree-list, 
+.tree-explorer .tree-list > li.is-collapsed > .tree-post {
+    display: none;
+}
 .tree-explorer .tree-post {
   display: flex; align-items: center; gap: 0.55rem; padding: 0.4rem 0.6rem;
   margin: 0.1rem 0 0.1rem 1.35rem; border-radius: var(--radius-sm); transition: background var(--transition);
@@ -749,3 +771,86 @@ footer { background: var(--bg-secondary); border-top: 1px solid var(--border); p
         font-size: 1.6rem;
     }
 }
+
+/* ==========================================================================
+   EXPLORADOR DE BLOG (Diseño IDE: Carpetas visibles, Archivos colapsados)
+   ========================================================================== */
+
+.blog-tree-page {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.tree-search-wrapper { position: relative; margin-bottom: 2rem; }
+.tree-search-icon { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem; }
+.tree-search-input {
+    width: 100%; background: var(--bg-secondary); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 0.85rem 1rem 0.85rem 3rem; color: var(--text-primary);
+    font-family: 'Inter', sans-serif; font-size: 0.95rem; transition: all var(--transition);
+}
+.tree-search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(136, 192, 208, 0.15); }
+
+.tree-explorer {
+    background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 2rem; box-shadow: var(--shadow-card); font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+}
+
+/* Árbol y ramas (Líneas guía tipo VS Code) */
+.tree-explorer .tree-list { list-style: none; margin: 0; padding-left: 1.6rem; border-left: 1px solid rgba(255, 255, 255, 0.05); }
+.tree-explorer > .tree-list { padding-left: 0; border-left: none; }
+.tree-explorer .tree-list li { position: relative; margin: 0.15rem 0; padding: 0.1rem 0; }
+
+/* REGLA MAGISTRAL: Las listas de subcarpetas SIEMPRE se muestran, ignorando is-collapsed */
+.tree-explorer .node-folder > .tree-list {
+    display: block !important;
+}
+
+/* REGLA MAGISTRAL 2: Los archivos SÍ se ocultan si la carpeta está colapsada */
+.tree-explorer .node-folder.is-collapsed > .node-files {
+    display: none;
+}
+
+/* Estilos de la Carpeta */
+.tree-explorer .node-folder > strong {
+    display: inline-flex; align-items: center; gap: 0.6rem; font-family: 'Inter', sans-serif;
+    font-weight: 600; font-size: 0.95rem; color: var(--text-primary); padding: 0.35rem 0.6rem;
+    margin-left: -0.6rem; border-radius: var(--radius-sm); cursor: pointer; user-select: none;
+    transition: background var(--transition), color var(--transition);
+}
+.tree-explorer .node-folder > strong:hover { background: var(--bg-card-hover); color: var(--accent); }
+
+/* Íconos dinámicos de carpeta */
+.tree-explorer .node-folder > strong::before {
+    content: "\f07c"; /* fa-folder-open (Estado normal/abierto) */
+    font-family: "Font Awesome 6 Free"; font-weight: 900; color: var(--accent); font-size: 0.9rem; flex-shrink: 0;
+}
+.tree-explorer .node-folder.is-collapsed > strong::before {
+    content: "\f07b"; /* fa-folder (Estado cerrado) */
+    color: var(--text-muted); /* Cambia de color cuando está cerrada */
+}
+
+/* Link de administrador junto a la carpeta */
+.folder-admin-link {
+    opacity: 0; margin-left: 0.5rem; color: #dcb67a; font-size: 0.85rem; transition: opacity var(--transition);
+}
+.tree-explorer .node-folder > strong:hover + .folder-admin-link, .folder-admin-link:hover { opacity: 1; }
+
+/* Archivos (Posts) */
+.tree-explorer .tree-post {
+    display: flex; align-items: center; gap: 0.6rem; padding: 0.35rem 0.6rem;
+    margin: 0.15rem 0 0.15rem 1.6rem; border-radius: var(--radius-sm); transition: background var(--transition);
+}
+.tree-explorer .tree-post:hover { background: var(--bg-card-hover); }
+
+.tree-explorer .tree-post a {
+    color: var(--text-secondary); text-decoration: none; font-weight: 500;
+    font-family: 'Inter', sans-serif; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;
+}
+.tree-explorer .tree-post a:hover { color: var(--text-primary); }
+
+.file-icon { color: var(--accent); font-size: 0.9rem; opacity: 0.8; }
+.draft-badge { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 600; color: var(--danger); background: rgba(191, 97, 106, 0.1); padding: 0.1rem 0.5rem; border-radius: var(--radius-sm); border: 1px solid rgba(191, 97, 106, 0.3); }
+
+/* Mostrar admin actions al hacer hover en el post */
+.tree-explorer .tree-post .admin-actions { margin-left: auto; opacity: 0; transition: opacity var(--transition); }
+.tree-explorer .tree-post:hover .admin-actions { opacity: 1; }
