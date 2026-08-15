@@ -21,7 +21,8 @@
 
   <div class="markdown-body">
     <article class="post-content" data-controller="math">
-      <%= markdown(@project.body) %>
+      <%# ÚNICO CAMBIO: Le pasamos @project para que el helper sepa dónde buscar imágenes locales %>
+      <%= markdown(@project.body, @project) %>
     </article>
   </div>
 

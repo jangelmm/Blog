@@ -878,3 +878,115 @@ footer {
 /* Mostrar admin actions al hacer hover en el post */
 .tree-explorer .tree-post .admin-actions { margin-left: auto; opacity: 0; transition: opacity var(--transition); }
 .tree-explorer .tree-post:hover .admin-actions { opacity: 1; }
+
+/* ==========================================================================
+   OBSIDIAN EMBEDS (Imágenes, PDFs y Archivos)
+   ========================================================================== */
+
+/* 1. Imágenes y SVG */
+.obsidian-image {
+    max-width: 100%;
+    border-radius: var(--radius-sm);
+    margin: 1.5rem 0;
+    display: block;
+}
+
+/* 2. Visor PDF */
+.obsidian-pdf-wrapper {
+    margin: 2rem 0;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-secondary);
+    box-shadow: var(--shadow-card);
+}
+
+.obsidian-pdf-header {
+    background: var(--bg-secondary);
+    padding: 0.6rem 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.obsidian-pdf-header i {
+    color: #e06c75; /* Rojo suave para el icono de PDF */
+}
+
+.obsidian-pdf {
+    width: 100%;
+    height: 700px; /* Altura ideal para leer en escritorio */
+    border: none;
+    display: block;
+}
+
+/* 3. Tarjeta de Archivo (Estilo Obsidian) */
+.obsidian-file-card {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    margin: 1.5rem 0;
+    text-decoration: none;
+    transition: all var(--transition);
+}
+
+.obsidian-file-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.obsidian-file-card .file-icon {
+    font-size: 2rem;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.obsidian-file-card .file-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+}
+
+.obsidian-file-card .filename {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.obsidian-file-card .file-action {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.obsidian-file-card .download-icon {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    transition: color var(--transition);
+}
+
+.obsidian-file-card:hover .download-icon {
+    color: var(--accent);
+}
+
+/* Ajuste móvil para el PDF */
+@media (max-width: 768px) {
+    .obsidian-pdf {
+        height: 500px; /* En móviles lo hacemos un poco más corto */
+    }
+}
