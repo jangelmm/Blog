@@ -65,16 +65,15 @@
   </div>
 
   <footer class="overleaf-bottom-tray">
-    <div class="tray-gallery-section" style="display: flex; flex-direction: column; justify-content: center;">
-      <div class="tray-header" style="margin-bottom: 5px; border-bottom: none; display: flex; align-items: center; gap: 15px;">
-        <span style="font-size: 0.9rem; color: var(--text-muted);">
-          <i class="fa-solid fa-folder-tree"></i> Repositorio de Medios
+    <div class="tray-media-section">
+      <div class="tray-media-header">
+        <span class="tray-media-title">
+          <i class="fa-regular fa-folder-open"></i> Repositorio de Medios
         </span>
-        <%= link_to "📂 Abrir Carpeta de Proyectos", media_assets_path(path: "Proyectos"), target: "_blank", class: "btn-ide-secondary", style: "text-decoration: none;" %>
+        <%= link_to media_assets_path(path: "Proyectos"), target: "_blank", class: "btn-tiny" do %>
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Carpeta
+        <% end %>
       </div>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">
-        Sube diagramas en el gestor y usa <code>![[/Proyectos/nombre.png]]</code> en el editor.
-      </p>
     </div>
 
     <div class="ide-actions-bar">

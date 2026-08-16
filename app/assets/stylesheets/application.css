@@ -753,3 +753,71 @@ footer { border-top: 1px solid var(--border-light); padding: 2rem 1.8rem; margin
     .media-snippet { justify-content: space-between; }
     .media-list-actions { position: absolute; top: 0.8rem; right: 1rem; background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--radius-sm); }
 }
+
+/* ==========================================================================
+   IDE BOTTOM TRAY (Barra inferior del editor)
+   ========================================================================== */
+.overleaf-bottom-tray {
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border);
+    gap: 2rem;
+}
+
+.tray-media-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.tray-media-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tray-media-title {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.tray-media-title i {
+    color: var(--text-muted);
+}
+
+.tray-media-hint {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.tray-media-hint code {
+    background: var(--bg-secondary);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    color: var(--text-primary);
+    border: 1px solid var(--border-light);
+}
+
+/* Responsividad para la barra inferior del IDE en móviles */
+@media (max-width: 768px) {
+    .overleaf-bottom-tray {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+        padding: 1.5rem 1.2rem;
+    }
+    
+    .tray-media-header {
+        justify-content: space-between;
+    }
+}
