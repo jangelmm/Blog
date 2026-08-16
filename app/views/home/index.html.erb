@@ -67,7 +67,7 @@
   <div class="blog-grid">
     <% @recent_posts.each do |post| %>
       <article class="blog-card">
-        <span class="date"><%= post.published_at&.strftime("%Y-%m-%d") %></span>
+        <div class="date"><%= (post.published_at || post.created_at).strftime("%Y-%m-%d") %></div>
         <h4><%= link_to post.title, post_show_path(path: post.path, slug: post.slug) %></h4>
         <p><%= post.description %></p>
       </article>

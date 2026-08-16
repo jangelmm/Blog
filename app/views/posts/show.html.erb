@@ -102,7 +102,7 @@
   // 2. Desactivamos el arranque automático para controlarlo nosotros con Turbo
   mermaid.initialize({ 
     startOnLoad: false, 
-    theme: 'dark',
+    theme: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'default',
     securityLevel: 'loose',
     fontFamily: 'Inter, sans-serif'
   });
