@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       get :paths, defaults: { format: :json }
     end
   end
+  post "/preview_markdown", to: "previews#render_preview"
 
   # ── Proyectos ────────────────────────────────────────────
   resources :projects, param: :slug

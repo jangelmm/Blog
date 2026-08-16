@@ -49,16 +49,30 @@
 
     <main class="overleaf-editor-zone">
       <div class="editor-top-toolbar">
-        <div class="toolbar-left">
+        <div class="toolbar-left" style="display: flex; gap: 0.5rem; align-items: center; height: 100%;">
           <span class="file-tab active">body.md</span>
+          <!-- Botón mágico para activar/desactivar la vista previa -->
+          <button type="button" id="toggle-preview-btn" class="btn-tiny" style="margin-left: 0.5rem; border:none; background: transparent;">
+            <i class="fa-solid fa-columns"></i> Vista Previa
+          </button>
         </div>
         <div class="toolbar-right">
-          <span class="hint-text">Imágenes: ![[img.png]] o ![[/Ruta/Absoluta/img.png]]</span>
+          <span class="hint-text">Imágenes: ![[img.png]]</span>
         </div>
       </div>
       
-      <div class="editor-textarea-wrapper">
-        <%= f.text_area :body, placeholder: "## Próximos pasos sugeridos\n\n* Añadir partículas...\n\nEscribe aquí tu Markdown.", class: "ide-textarea" %>
+      <div class="editor-split-view">
+        <!-- Lado Izquierdo: El Editor -->
+        <div class="editor-textarea-wrapper">
+          <%= f.text_area :body, id: "editor_textarea", placeholder: "## Detalles técnicos\n\nEscribe aquí tu Markdown...", class: "ide-textarea" %>
+        </div>
+        
+        <!-- Lado Derecho: La Vista Previa -->
+        <div class="editor-preview-wrapper markdown-body" id="preview_pane">
+          <div class="preview-empty-state" style="color: var(--text-muted); text-align: center; margin-top: 4rem;">
+            Escribe algo a la izquierda para ver la magia...
+          </div>
+        </div>
       </div>
     </main>
   </div>
@@ -83,15 +97,94 @@
 <% end %>
 
 <script>
+  // 1. Le quitamos el type="module" para que Turbo lo lea instantáneamente
   document.addEventListener("turbo:load", () => {
+    const textarea = document.getElementById("editor_textarea");
+    const previewPane = document.getElementById("preview_pane");
+    const toggleBtn = document.getElementById("toggle-preview-btn");
+    const splitView = document.querySelector(".editor-split-view");
     const pathInput = document.getElementById("post_path_input");
     const mediaLink = document.getElementById("media_manager_link");
 
+    if (!textarea || !previewPane) return;
+
+    // 2. RECUPERADO: Lógica para actualizar el enlace del gestor de medios
     if (pathInput && mediaLink) {
       pathInput.addEventListener("input", (e) => {
         const currentPath = e.target.value.trim() || "General";
         mediaLink.href = `/media_assets?path=${encodeURIComponent(currentPath)}`;
       });
     }
+
+    // 3. Lógica del Botón: Mostrar/Ocultar Vista Previa
+    if (toggleBtn) {
+      toggleBtn.addEventListener("click", () => {
+        splitView.classList.toggle("show-preview");
+        if (splitView.classList.contains("show-preview")) {
+          toggleBtn.style.color = "var(--accent)";
+          renderPreview(); // Renderizar inmediatamente al abrir
+        } else {
+          toggleBtn.style.color = "inherit";
+        }
+      });
+    }
+
+    // 4. Lógica del Editor: Auto-render con retraso (Debounce)
+    let timeout = null;
+    
+    const renderPreview = () => {
+      const metaCsrf = document.querySelector('meta[name="csrf-token"]');
+      const csrfToken = metaCsrf ? metaCsrf.content : "";
+      const textToRender = textarea.value;
+      const currentPath = pathInput ? pathInput.value : "";
+
+      fetch("/preview_markdown", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": csrfToken
+        },
+        body: JSON.stringify({ text: textToRender, path: currentPath })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Error de conexión con el servidor");
+        return res.text();
+      })
+      .then(html => {
+        previewPane.innerHTML = html;
+        
+        // Magia 1: Renderizar Ecuaciones Matemáticas (KaTeX)
+        if (window.renderMathInElement) {
+          window.renderMathInElement(previewPane, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false}
+            ],
+            throwOnError: false
+          });
+        }
+        
+        // Magia 2: Importación Dinámica de Mermaid JS
+        // Esto pide la librería en segundo plano solo si detecta un diagrama
+        const mermaidDivs = previewPane.querySelectorAll('.mermaid');
+        if (mermaidDivs.length > 0) {
+          import('https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs')
+            .then(module => {
+              module.default.initialize({ startOnLoad: false, theme: 'dark', fontFamily: 'Inter, sans-serif' });
+              module.default.run({ nodes: mermaidDivs }).catch(err => console.warn("Mermaid error silencioso:", err));
+            });
+        }
+      })
+      .catch(err => console.error("Error al previsualizar:", err));
+    };
+
+    // 5. Escuchamos cuando escribes
+    textarea.addEventListener("input", () => {
+      // Solo gastamos recursos del servidor si el panel derecho está abierto
+      if (!splitView.classList.contains("show-preview")) return;
+      
+      clearTimeout(timeout);
+      timeout = setTimeout(renderPreview, 500); 
+    });
   });
 </script>
