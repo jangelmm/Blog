@@ -26,7 +26,9 @@
     <!-- Cuerpo de la Biografía -->
     <div class="about-hero-body">
       <% if @profile.bio.present? %>
-        <div class="bio-text markdown-body" style="white-space: pre-line;"><%= @profile.bio %></div>
+        <div class="bio-text markdown-body">
+          <%= markdown(@profile.bio) %>
+        </div>
       <% end %>
 
       <% if @profile.quote.present? %>
