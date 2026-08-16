@@ -488,3 +488,268 @@ footer { border-top: 1px solid var(--border-light); padding: 2rem 1.8rem; margin
 .about-hero-body { width: 100%; text-align: left; display: flex; flex-direction: column; gap: 1.5rem; }
 .about-hero-body .bio-text { color: var(--text-primary); font-size: 1.05rem; line-height: 1.7; }
 .about-quote { border-left: 3px solid var(--text-primary); padding-left: 1rem; font-size: 0.95rem; color: var(--text-secondary); text-align: left; font-style: italic; }
+
+/* ==========================================================================
+   GESTOR DE ARCHIVOS (MEDIA MANAGER - ESTILO NOTION)
+   ========================================================================== */
+
+.media-manager-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1.8rem;
+}
+
+.media-header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 1rem;
+}
+
+.media-header h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text-primary);
+}
+
+.media-header h2 i {
+    color: var(--text-muted);
+}
+
+.media-header h2 code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+/* Zona de Subida */
+.media-upload-zone {
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    transition: border-color var(--transition);
+}
+
+.media-upload-zone:hover {
+    border-color: var(--text-muted);
+    background: var(--bg-secondary);
+}
+
+.media-upload-form {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.file-input-wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+}
+
+.file-input-icon {
+    color: var(--text-muted);
+}
+
+.custom-file-input {
+    color: var(--text-primary);
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+}
+
+.custom-file-input::file-selector-button {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    margin-right: 1rem;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all var(--transition);
+}
+
+.custom-file-input::file-selector-button:hover {
+    background-color: var(--border-light);
+    border-color: var(--text-muted);
+}
+
+/* Lista de Archivos */
+.media-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.media-list-row {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 0.8rem 1rem;
+    gap: 1.2rem;
+    transition: all var(--transition);
+}
+
+.media-list-row:hover {
+    background-color: var(--bg-secondary);
+    border-color: var(--border);
+}
+
+/* Miniatura más compacta */
+.media-list-thumb {
+    width: 60px;
+    height: 45px;
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid var(--border-light);
+}
+
+.media-list-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.doc-icon {
+    font-size: 1.5rem;
+    color: var(--text-muted);
+}
+
+.media-list-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+}
+
+.media-filename {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.media-filename i {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.media-meta {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.media-list-snippet-container {
+    flex-shrink: 0;
+}
+
+.media-snippet {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    transition: border-color var(--transition);
+    color: var(--text-secondary);
+}
+
+.media-snippet:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+}
+
+.media-snippet code {
+    background: transparent;
+    padding: 0;
+    border: none;
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.media-list-actions {
+    flex-shrink: 0;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.action-btn {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid transparent;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all var(--transition);
+}
+
+.action-btn:hover {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+.action-btn-danger:hover {
+    color: var(--danger);
+    background: rgba(235, 87, 87, 0.1);
+    border-color: transparent;
+}
+
+.media-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+    opacity: 0.5;
+}
+
+/* Responsividad Gestor */
+@media (max-width: 768px) {
+    .media-upload-form { flex-direction: column; align-items: stretch; }
+    .media-upload-form .btn-primary { width: 100%; justify-content: center; }
+    .media-list-row { flex-direction: column; align-items: flex-start; gap: 0.8rem; position: relative; }
+    .media-list-snippet-container { width: 100%; }
+    .media-snippet { justify-content: space-between; }
+    .media-list-actions { position: absolute; top: 0.8rem; right: 1rem; background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--radius-sm); }
+}
