@@ -23,10 +23,22 @@ module ApplicationHelper
         end
 
         if asset&.file&.attached?
-          file_url = rails_blob_path(asset.file, disposition: :attachment, only_path: true)
-          extension = File.extname(display_name).downcase
+          if asset.file.image?
+            # 1. Renderizado para imágenes (.png, .jpg, .webp, etc.)
+            file_url = rails_blob_path(asset.file, only_path: true)
+            html_block = %Q(<img src="#{file_url}" alt="#{display_name}" class="obsidian-embedded-image" style="max-width: 100%; height: auto; border-radius: 8px; margin: 1.5rem auto; display: block; border: 1px solid var(--border-light);">)
 
-          html_block = %Q(<a href="#{file_url}" download="#{display_name}" target="_blank" class="obsidian-file-card"><div class="file-icon"><i class="fa-solid fa-file-lines"></i></div><div class="file-info"><span class="filename">#{display_name}</span><span class="file-action">Haz clic para descargar</span></div><div class="download-icon"><i class="fa-solid fa-download"></i></div></a>)
+          elsif asset.file.content_type == "application/pdf"
+            # 2. Renderizado para PDFs (Visor integrado estilo Notion)
+            # Nota el disposition: :inline para que el navegador lo muestre en vez de descargarlo
+            file_url = rails_blob_path(asset.file, disposition: :inline, only_path: true)
+            html_block = %Q(<embed src="#{file_url}" type="application/pdf" width="100%" height="600px" style="border-radius: 8px; border: 1px solid var(--border-light); margin: 1.5rem 0;">)
+
+          else
+            # 3. Renderizado para documentos genéricos (.zip, .docx, etc. - la tarjeta gris)
+            file_url = rails_blob_path(asset.file, disposition: :attachment, only_path: true)
+            html_block = %Q(<a href="#{file_url}" download="#{display_name}" target="_blank" class="obsidian-file-card"><div class="file-icon"><i class="fa-solid fa-file-lines"></i></div><div class="file-info"><span class="filename">#{display_name}</span><span class="file-action">Haz clic para descargar</span></div><div class="download-icon"><i class="fa-solid fa-download"></i></div></a>)
+          end
 
           obsidian_blocks << html_block
           "OBSIDIANPLACEHOLDER#{obsidian_blocks.size - 1}XYZ"
@@ -76,10 +88,8 @@ module ApplicationHelper
       html.gsub!(placeholder, block)
     end
 
-    # Restaurar Mermaid en un contenedor especial
     mermaid_blocks.each_with_index do |block, index|
       placeholder = "MERMAIDPLACEHOLDER#{index}XYZ"
-      # Usamos <pre> en lugar de <div> para que el navegador NO borre los saltos de línea
       mermaid_html = %Q(<pre class="mermaid" style="display: flex; justify-content: center; margin: 2rem 0; background: transparent; border: none;">\n#{block}\n</pre>)
       html.gsub!("<p>#{placeholder}</p>", mermaid_html)
       html.gsub!(placeholder, mermaid_html)
