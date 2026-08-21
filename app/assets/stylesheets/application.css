@@ -406,21 +406,114 @@ footer { border-top: 1px solid var(--border-light); padding: 2rem 1.8rem; margin
 .file-icon { display: none; /* Limpieza Notion */ }
 
 /* ==========================================================================
-   BLOQUE DE CITACIÓN BIBLIOGRÁFICA
+   BLOQUE DE CITACIÓN BIBLIOGRÁFICA (Texto libre, sin cajas ni líneas)
    ========================================================================== */
 
-.post-citation-card { position: relative; background: var(--bg-secondary); border-radius: var(--radius-sm); padding: 1.5rem; margin-top: 3rem; margin-bottom: 2rem; overflow: hidden; }
-.citation-content { position: relative; z-index: 2; }
-.citation-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
-.citation-title { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin: 0; }
-.citation-url { margin-bottom: 1.2rem; }
-.citation-url .url-link { color: var(--text-secondary); font-size: 0.85rem; text-decoration: underline; word-break: break-all; }
-.citation-metadata { display: flex; flex-wrap: wrap; gap: 1.5rem; border-top: 1px solid var(--border); padding-top: 1rem; }
-.meta-group { display: flex; flex-direction: column; gap: 0.1rem; }
-.meta-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
-.meta-value { font-size: 0.85rem; color: var(--text-primary); }
-.license-link { color: var(--text-primary); text-decoration: underline; }
-.bg-cc-icon { display: none; /* Ruido visual eliminado */ }
+.post-citation-card { 
+    position: relative; 
+    background: var(--bg-secondary); 
+    border: 1px solid var(--border-light, rgba(255, 255, 255, 0.08));
+    border-radius: var(--radius-sm, 8px); 
+    padding: 1.5rem; 
+    margin-top: 3.5rem; 
+    margin-bottom: 2rem; 
+    overflow: hidden; 
+}
+
+.citation-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    margin-bottom: 0.2rem; 
+}
+
+.citation-title { 
+    font-size: 1.1rem; 
+    font-weight: 600; 
+    color: var(--text-primary); 
+    margin: 0; 
+}
+
+.citation-url { 
+    margin-bottom: 1.5rem; 
+}
+
+.citation-url .url-link { 
+    color: var(--text-secondary); 
+    font-size: 0.85rem; 
+    text-decoration: none; 
+    word-break: break-all; 
+    font-family: 'JetBrains Mono', 'Fira Code', monospace; 
+    transition: color var(--transition);
+}
+
+.citation-url .url-link:hover {
+    color: var(--accent);
+}
+
+.citation-metadata { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 2.5rem; 
+    margin-bottom: 1.2rem; 
+}
+
+.meta-group { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 0.3rem; 
+}
+
+.meta-label { 
+    font-size: 0.7rem; 
+    color: var(--text-muted); 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px; 
+    font-weight: 600; 
+}
+
+.meta-value { 
+    font-size: 0.85rem; 
+    color: var(--text-primary); 
+    font-weight: 500;
+}
+
+/* Las licencias ahora flotan libres, sin cajas ni bordes de fondo */
+.citation-notes {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin-top: 1rem;
+    font-size: 0.78rem; 
+    color: var(--text-muted); 
+    display: flex; 
+    gap: 1.5rem; 
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.citation-notes span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.citation-notes a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 255, 255, 0.3);
+    text-underline-offset: 3px;
+    transition: all 0.2s ease;
+}
+
+.citation-notes a:hover {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+}
+
+.bg-cc-icon { 
+    display: none; 
+}
 
 /* ==========================================================================
    MEDIA LIST VIEW (ESTILO NOTION FILES)
