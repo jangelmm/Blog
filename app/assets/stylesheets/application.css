@@ -867,3 +867,47 @@ footer { border-top: 1px solid var(--border-light); padding: 2rem 1.8rem; margin
     .editor-split-view.show-preview .editor-textarea-wrapper { display: none; }
     .editor-split-view.show-preview .editor-preview-wrapper { flex: 1; width: 100%; }
 }
+
+/* ==========================================================================
+   OBSIDIAN CALLOUTS
+   ========================================================================== */
+.obsidian-callout {
+    /* La magia de los canales RGB nos permite controlar la opacidad (0.1) */
+    background-color: rgba(var(--callout-color), 0.1);
+    border: 1px solid rgba(var(--callout-color), 0.2);
+    border-left: 4px solid rgb(var(--callout-color));
+    border-radius: var(--radius-sm, 6px);
+    margin: 1.5rem 0;
+    padding: 1rem 1.2rem;
+    transition: background-color var(--transition);
+}
+
+.callout-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-weight: 600;
+    color: rgb(var(--callout-color));
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+}
+
+.callout-icon {
+    font-size: 1rem;
+    margin-top: 2px;
+}
+
+.callout-content {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Evitamos márgenes dobles dentro de las tarjetas */
+.callout-content p:last-child {
+    margin-bottom: 0;
+}
+
+.callout-content p:first-child {
+    margin-top: 0;
+}
