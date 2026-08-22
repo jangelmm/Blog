@@ -446,9 +446,8 @@ footer { border-top: 1px solid var(--border-light); padding: 2rem 1.8rem; margin
 /* Líneas guía de indentación */
 .tree-explorer .tree-list, 
 .tree-explorer .node-files {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    padding-left: 1.2rem; margin-left: 1rem;
+    border-left: 1px solid var(--border-light, rgba(255, 255, 255, 0.1));
 }
 /* Limpiar línea para el primer nivel dentro de la caja */
 .tree-explorer > .tree-list > li > .tree-list > li > .tree-list,
