@@ -370,40 +370,157 @@ footer { border-top: 1px solid var(--border-light); padding: 2rem 1.8rem; margin
 .overleaf-bottom-tray { padding: 0.8rem 1.2rem; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
 
 /* ==========================================================================
-   BLOG TREE EXPLORER
+   BLOG TREE EXPLORER (Cajas Externas + Árbol Interno + 10 Colores)
    ========================================================================== */
 
-.blog-tree-page { max-width: 700px; margin: 0 auto; }
-.tree-search-wrapper { position: relative; margin-bottom: 1.5rem; }
+.blog-tree-page { max-width: 750px; margin: 0 auto; }
+.tree-search-wrapper { position: relative; margin-bottom: 2rem; }
 .tree-search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; }
-.tree-search-input { width: 100%; background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.6rem 1rem 0.6rem 2.2rem; color: var(--text-primary); font-family: inherit; font-size: 0.95rem; }
+.tree-search-input { width: 100%; background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm, 8px); padding: 0.8rem 1rem 0.8rem 2.4rem; color: var(--text-primary); font-family: inherit; font-size: 0.95rem; }
 .tree-search-input:focus { outline: none; border-color: var(--accent); }
 
-.tree-explorer { background: transparent; padding: 0; font-family: inherit; }
-.tree-explorer .tree-list { list-style: none; margin: 0; padding-left: 1.2rem; border-left: 1px solid var(--border-light); }
-.tree-explorer > .tree-list { padding-left: 0; border-left: none; }
-.tree-explorer .tree-list li { position: relative; margin: 0.1rem 0; padding: 0.1rem 0; }
+/* Reset del explorador */
+.tree-explorer { font-family: inherit; width: 100%; padding: 0; }
+.tree-explorer ul { list-style: none; margin: 0; padding: 0; }
 
-.tree-explorer .node-folder.is-collapsed > .tree-list, .tree-explorer .node-folder.is-collapsed > .node-files { display: none; }
+/* Ocultar elementos cuando la carpeta está colapsada */
+.tree-explorer .node-folder.is-collapsed > .tree-list, 
+.tree-explorer .node-folder.is-collapsed > .node-files { display: none; }
 
-.tree-explorer .node-folder > strong {
-    display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.95rem;
-    color: var(--text-primary); padding: 0.2rem 0.4rem; margin-left: -0.4rem; border-radius: 3px; cursor: pointer; user-select: none;
+
+/* ==========================================================================
+   1. LA ESTRUCTURA EXTERNA (NODO RAÍZ Y CAJAS)
+   ========================================================================== */
+
+/* Nodo Raíz ("es" / "en") */
+.tree-explorer > .tree-list > li > .node-folder > strong {
+    display: inline-block; font-size: 0.85rem; color: var(--text-muted); 
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; cursor: pointer;
 }
-.tree-explorer .node-folder > strong:hover { background: var(--bg-secondary); }
-.tree-explorer .node-folder > strong::after { content: "\f078"; font-family: "Font Awesome 6 Free"; font-weight: 900; font-size: 0.6rem; color: var(--text-muted); margin-left: 0.2rem; transition: transform 0.2s; }
-.tree-explorer .tree-list > li.is-collapsed > strong::after { transform: rotate(-90deg); }
+.tree-explorer > .tree-list > li > .node-folder > strong::after { content: "\f078"; font-family: "Font Awesome 6 Free"; font-weight: 900; margin-left: 0.5rem; }
+.tree-explorer > .tree-list > li.is-collapsed > .node-folder > strong::after { transform: rotate(-90deg); }
 
-.folder-admin-link { opacity: 0; margin-left: 0.5rem; color: var(--text-muted); font-size: 0.8rem; }
-.tree-explorer .node-folder > strong:hover + .folder-admin-link, .folder-admin-link:hover { opacity: 1; }
+/* Contenedor de las Cajas */
+.tree-explorer > .tree-list > li > .tree-list > li {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light, rgba(255, 255, 255, 0.05));
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
 
-.tree-explorer .tree-post { display: flex; align-items: center; gap: 0.5rem; padding: 0.2rem 0.4rem; margin: 0.1rem 0 0.1rem 1.2rem; border-radius: 3px; }
-.tree-explorer .tree-post:hover { background: var(--bg-secondary); }
-.tree-explorer .tree-post a { color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
-.tree-explorer .tree-post a:hover { color: var(--text-primary); text-decoration: underline; text-underline-offset: 2px; }
-.tree-explorer .tree-post .admin-actions { margin-left: auto; opacity: 0; }
-.tree-explorer .tree-post:hover .admin-actions { opacity: 1; }
-.file-icon { display: none; /* Limpieza Notion */ }
+/* 10 COLORES VIBRANTES (Ciclo automático) */
+.tree-explorer > .tree-list > li > .tree-list > li:nth-child(10n + 1) { border-left: 4px solid #f59e0b; --cat-color: #f59e0b; }
+.tree-explorer > .tree-list > li > .tree-list > li:nth-child(10n + 2) { border-left: 4px solid #3b82f6; --cat-color: #3b82f6; }
+.tree-explorer > .tree-list > li > .tree-list > li:nth-child(10n + 3) { border-left: 4px solid #ef4444; --cat-color: #ef4444; }
+.tree-explorer > .tree-list > li > .tree-list > li:nth-child(10n + 4) { border-left: 4px solid #10b981; --cat-color: #10b981; }
+.tree-explorer > .tree-list > li > .tree-list > li:nth-child(10n + 5) { border-left: 4px solid #8b5cf6; --cat-color: #8b5cf6; }
+.tree-explorer > .tree-list > li > .tree-list > li:nth-child(10n + 6) { border-left: 4px solid #06b6d4; --cat-color: #06b6d4; }
+.tree-explorer > .tree-list > li > .tree-list > li:nth-child(10n + 7) { border-left: 4px solid #eab308; --cat-color: #eab308; }
+.tree-explorer > .tree-list > li > .tree-list > li:nth-child(10n + 8) { border-left: 4px solid #f43f5e; --cat-color: #f43f5e; }
+.tree-explorer > .tree-list > li > .tree-list > li:nth-child(10n + 9) { border-left: 4px solid #6366f1; --cat-color: #6366f1; }
+.tree-explorer > .tree-list > li > .tree-list > li:nth-child(10n + 10){ border-left: 4px solid #14b8a6; --cat-color: #14b8a6; }
+
+/* Título de la Caja (Cabecera) */
+.tree-explorer > .tree-list > li > .tree-list > li > .node-folder > strong {
+    display: inline-flex; align-items: center;
+    background: rgba(0, 0, 0, 0.1); 
+    padding: 0.8rem 1.2rem;
+    margin-bottom: 0.8rem;
+    font-size: 1.05rem; font-weight: 600; color: var(--text-primary);
+    border-bottom: 1px solid var(--border-light, rgba(255, 255, 255, 0.05));
+    border-radius: 8px 8px 0 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+.tree-explorer > .tree-list > li > .tree-list > li > .node-folder > strong::before {
+    color: var(--cat-color) !important; font-size: 1.1rem; margin-right: 0.6rem;
+}
+
+
+/* ==========================================================================
+   2. EL INTERIOR (ÁRBOL CLÁSICO E ÍCONOS)
+   ========================================================================== */
+
+/* Líneas guía de indentación */
+.tree-explorer .tree-list, 
+.tree-explorer .node-files {
+    padding-left: 1.2rem; margin-left: 1rem;
+    border-left: 1px solid var(--border-light, rgba(255, 255, 255, 0.1));
+}
+/* Limpiar línea para el primer nivel dentro de la caja */
+.tree-explorer > .tree-list > li > .tree-list > li > .tree-list,
+.tree-explorer > .tree-list > li > .tree-list > li > .node-files {
+    border-left: none; margin-left: 0; padding-left: 1.2rem; padding-right: 1.2rem;
+}
+
+/* Carpetas y Enlaces base */
+.tree-explorer .node-folder > strong,
+.tree-explorer .tree-post,
+.tree-explorer .node-files li {
+    display: inline-flex; align-items: center;
+    padding: 0.25rem 0.5rem; margin: 0.1rem 0;
+    border-radius: 4px; font-size: 0.9rem; color: var(--text-secondary);
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+/* Íconos Dinámicos de Carpetas internas */
+.tree-explorer .node-folder > strong { color: var(--text-primary); font-weight: 500; cursor: pointer; }
+.tree-explorer .node-folder > strong::before { content: "\f07c"; font-family: "Font Awesome 6 Free"; font-weight: 900; color: var(--text-muted); margin-right: 0.5rem; }
+.tree-explorer .node-folder.is-collapsed > strong::before { content: "\f07b"; }
+.tree-explorer .node-folder > strong::after { content: "\f078"; font-family: "Font Awesome 6 Free"; font-weight: 900; font-size: 0.65rem; color: var(--text-muted); margin-left: 0.4rem; transition: transform 0.2s; }
+.tree-explorer .node-folder.is-collapsed > strong::after { transform: rotate(-90deg); }
+
+/* Íconos de Archivos */
+.tree-explorer .tree-post a { color: inherit; text-decoration: none; width: 100%; display: flex; align-items: center; }
+.tree-explorer .tree-post a::before { content: "\f15c"; font-family: "Font Awesome 6 Free"; font-weight: 400; opacity: 0.6; margin-right: 0.5rem; color: var(--text-muted); }
+.tree-explorer .node-files li::before { content: "\f03e"; font-family: "Font Awesome 6 Free"; font-weight: 400; opacity: 0.6; margin-right: 0.5rem; color: var(--text-muted); }
+
+/* Efecto Hover General */
+.tree-explorer .node-folder > strong:hover,
+.tree-explorer .tree-post:hover,
+.tree-explorer .node-files li:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+
+/* ==========================================================================
+   3. ENLACE DE ABRIR DIRECTORIO Y ACCIONES DE ADMIN
+   ========================================================================== */
+
+/* ¡CORRECCIÓN AQUÍ! Restauramos el signo "+" para apuntar al enlace hermano */
+.folder-admin-link { 
+    opacity: 0; 
+    margin-left: 0.8rem; 
+    font-size: 0.75rem; 
+    color: var(--text-muted); 
+    text-decoration: none;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05); /* Diseño de botón sutil */
+    transition: opacity 0.2s, background 0.2s, color 0.2s;
+}
+
+/* Hover sobre el botón de directorio */
+.folder-admin-link:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* Mostrar el enlace "Abrir directorio" al pasar el ratón por el título de la carpeta o el enlace mismo */
+.tree-explorer .node-folder > strong:hover + .folder-admin-link, 
+.folder-admin-link:hover { 
+    opacity: 1; 
+}
+
+/* Acciones de administrador en los posts */
+.tree-explorer .admin-actions { margin-left: auto; opacity: 0; display: inline-flex; gap: 0.4rem; }
+.tree-explorer .tree-post:hover .admin-actions,
+.tree-explorer .node-files li:hover .admin-actions { opacity: 1; }
+
+.file-icon { display: none !important; }
 
 /* ==========================================================================
    BLOQUE DE CITACIÓN BIBLIOGRÁFICA (Texto libre, sin cajas ni líneas)
